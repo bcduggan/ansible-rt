@@ -1,0 +1,6 @@
+---
+- hosts: rt
+  sudo: yes
+
+  roles:
+    - common
