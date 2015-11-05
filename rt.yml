@@ -4,3 +4,5 @@
 
   roles:
     - common
+    - deimosfr.mariadb
+    - rt
