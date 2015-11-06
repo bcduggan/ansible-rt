@@ -1,0 +1,46 @@
+---
+
+## TODO: Apache handler
+
+- name: Install Apache
+  apt:
+    name: apache2
+    state: present
+
+- name: Install FastCGI module for Apache
+  apt:
+    name: libapache2-mod-fcgid
+    state: present
+
+- name: Configure mod_fcgid
+  lineinfile:
+    dest: /etc/apache2/mods-available/fcgid.conf
+    line: "  FcgidMaxRequestLen 1073741824"
+    insertafter: "  FcgidConnectTimeout 20"
+    state: present
+
+- name: Configure Apache RT site
+  copy:
+    src: roles/rt/files/001-rt.conf
+    dest: /etc/apache2/sites-available/001-rt.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Disable default Apache site
+  file:
+    path: /etc/apache2/sites-enabled/000-default.conf
+    state: absent
+
+- name: Enable Apache RT site
+  file:
+    path: /etc/apache2/sites-enabled/001-rt.conf
+    state: link
+    src: /etc/apache2/sites-available/001-rt.conf
+  notify:
+    - Restart Apache
+
+- name: Ensure Apache is running
+  service:
+    name: apache2
+    state: started
