@@ -6,6 +6,6 @@ https://github.com/bestpractical/rt
 
 Dependencies:
 
-Ansible role demios.mariadb
+Ansible role deimos.mariadb
 
 RT depends on a PostGres or MySQL database. Right now, this role depends on MariaDB, which is apparently a non-Oracle fork of MySQL. It seems to work OK so far. 
