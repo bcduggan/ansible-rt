@@ -1,7 +1,9 @@
-# Ansible role to provision some versions of Request Tracker
+## Ansible role to provision some versions of Request Tracker
 
 Request Tracker:
+
 https://bestpractical.com/
+
 https://github.com/bestpractical/rt
 
 Dependencies:
