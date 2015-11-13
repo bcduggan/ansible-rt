@@ -58,4 +58,13 @@
   args:
     chdir: /tmp/rt-4.2.12
 
+- name: Install RT_SiteConfig.pm
+  copy:
+    src: roles/rt/files/RT_SiteConfig.pm
+    dest: /opt/rt4/etc/RT_SiteConfig.pm
+    owner: root
+    group: www-data
+    mode: 0440
+  notify: Restart Apache
+
 - include: apache.yml
