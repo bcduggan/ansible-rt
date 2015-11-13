@@ -12,50 +12,50 @@
     owner: root
     group: root
     mode: 0644
-    
+
 - name: Download RT 4.2.12
   get_url:
-    url: https://github.com/bestpractical/rt/archive/rt-4.2.12.zip
-    dest: /tmp/rt-4.2.12.zip
+    url: https://download.bestpractical.com/pub/rt/release/rt-4.2.12.tar.gz
+    dest: /tmp/rt-4.2.12.tar.gz
     validate_certs: yes
-    sha256sum: 5b69420cd10b723414ebad862da3286fc0077a5ca0ac54b3694fc257040fb498
+    sha256sum: e21220c609706dc9977a13309d78a4d9171455ae823cf549311342cedd837264
     force: no
 
-- name: Unzip RT
+- name: Untar and ungzip RT
   unarchive:
     copy: no
-    src: /tmp/rt-4.2.12.zip
+    src: /tmp/rt-4.2.12.tar.gz
     dest: /tmp
-    creates: /tmp/rt-rt-4.2.12
+    creates: /tmp/rt-4.2.12
 
 - name: Build RT configure script
   shell: ./configure.ac
   args:
-    chdir: /tmp/rt-rt-4.2.12
-    creates: /tmp/rt-rt-4.2.12/configure
+    chdir: /tmp/rt-4.2.12
+    creates: /tmp/rt-4.2.12/configure
 
 - name: Configure RT
   shell: ./configure
   args:
-    chdir: /tmp/rt-rt-4.2.12
+    chdir: /tmp/rt-4.2.12
     ## Creates this file, among many others. Should all be listed?
-    creates: /tmp/rt-rt-4.2.12/etc/RT_config.pm
+    creates: /tmp/rt-4.2.12/etc/RT_config.pm
 
 ## TODO: Test RT dependencies with 'make testdeps'
 
 - name: Fix RT dependencies
   command: make fixdeps
   args:
-    chdir: /tmp/rt-rt-4.2.12
+    chdir: /tmp/rt-4.2.12
 
 - name: Install RT
   command: make install
   args:
-    chdir: /tmp/rt-rt-4.2.12
+    chdir: /tmp/rt-4.2.12
 
 - name: Initialize RT database
   shell: echo "root" | make initialize-database
   args:
-    chdir: /tmp/rt-rt-4.2.12
+    chdir: /tmp/rt-4.2.12
 
 - include: apache.yml
