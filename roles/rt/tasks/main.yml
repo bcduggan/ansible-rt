@@ -13,51 +13,15 @@
     group: root
     mode: 0644
 
-- name: Download RT 4.2.12
-  get_url:
-    url: https://download.bestpractical.com/pub/rt/release/rt-4.2.12.tar.gz
-    dest: /tmp/rt-4.2.12.tar.gz
-    validate_certs: yes
-    sha256sum: e21220c609706dc9977a13309d78a4d9171455ae823cf549311342cedd837264
-    force: no
-
-- name: Untar and ungzip RT
-  unarchive:
-    copy: no
-    src: /tmp/rt-4.2.12.tar.gz
-    dest: /tmp
-    creates: /tmp/rt-4.2.12
-
-- name: Build RT configure script
-  shell: ./configure.ac
-  args:
-    chdir: /tmp/rt-4.2.12
-    creates: /tmp/rt-4.2.12/configure
-
-- name: Configure RT
-  shell: ./configure
-  args:
-    chdir: /tmp/rt-4.2.12
-    ## Creates this file, among many others. Should all be listed?
-    creates: /tmp/rt-4.2.12/etc/RT_config.pm
-
-## TODO: Test RT dependencies with 'make testdeps'
-
-- name: Fix RT dependencies
-  command: make fixdeps
-  args:
-    chdir: /tmp/rt-4.2.12
-
-- name: Install RT
-  command: make install
-  args:
-    chdir: /tmp/rt-4.2.12
-
-- name: Initialize RT database
-  shell: echo "root" | make initialize-database
-  args:
-    chdir: /tmp/rt-4.2.12
-
+- name: Test rt4 database presence
+  shell: /usr/bin/mysql --user=root --password={{ mariadb_root_password }} --batch --execute='show databases;' | grep --quiet rt4
+  register: db_test
+  failed_when: False
+  changed_when: False
+  
+- include: install_rt.yml
+  when: db_test|failed
+  
 - name: Install RT_SiteConfig.pm
   copy:
     src: roles/rt/files/RT_SiteConfig.pm

@@ -1,0 +1,47 @@
+---
+
+- name: Download RT 4.2.12
+  get_url:
+    url: https://download.bestpractical.com/pub/rt/release/rt-4.2.12.tar.gz
+    dest: /tmp/rt-4.2.12.tar.gz
+    validate_certs: yes
+    sha256sum: e21220c609706dc9977a13309d78a4d9171455ae823cf549311342cedd837264
+    force: no
+
+- name: Untar and ungzip RT
+  unarchive:
+    copy: no
+    src: /tmp/rt-4.2.12.tar.gz
+    dest: /tmp
+    creates: /tmp/rt-4.2.12
+
+- name: Configure RT
+  shell: ./configure
+  args:
+    chdir: /tmp/rt-4.2.12
+    ## Creates this file, among many others. Should all be listed?
+    creates: /tmp/rt-4.2.12/etc/RT_config.pm
+
+- name: Test RT dependencies
+  command: make testdeps
+  args:
+    chdir: /tmp/rt-4.2.12
+  register: testdeps
+  failed_when: False
+  changed_when: False
+    
+- name: Fix RT dependencies
+  command: make fixdeps
+  args:
+    chdir: /tmp/rt-4.2.12
+  when: testdeps|failed
+
+- name: Install RT
+  command: make install
+  args:
+    chdir: /tmp/rt-4.2.12
+
+- name: Initialize RT database
+  shell: echo "root" | make initialize-database
+  args:
+    chdir: /tmp/rt-4.2.12
