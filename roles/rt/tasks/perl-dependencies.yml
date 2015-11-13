@@ -5,6 +5,11 @@
     name: autoconf
     state: present
 
+- name: Install perl-doc
+  apt:
+    name: perl-doc
+    state: present
+
 - name: Install RT dependency Term::ReadKey
   apt:
     name: libterm-readkey-perl
