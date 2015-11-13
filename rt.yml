@@ -2,6 +2,12 @@
 - hosts: rt
   sudo: yes
 
+  tasks:
+    - name: Setup authorized ssh key
+      authorized_key:
+        user: vagrant
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+  
   roles:
     - deimosfr.mariadb
     - rt
