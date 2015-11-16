@@ -2,9 +2,9 @@
 
 To use:
 
-> $ cd ansible-rt
-> $ ansible-galaxy install -r requirements.txt -p roles
-> $ vagrant up rt
+    $ cd ansible-rt
+    $ ansible-galaxy install -r requirements.txt -p roles
+    $ vagrant up rt
 
 The provisioning process will take several minutes the first time. Both Vagrant and Ansible will need to download a lot of stuff. Make sure you have a solid Internet connection, then grab some coffee, tea, hot or cold water, a cigarette, etc.
 
