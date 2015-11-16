@@ -4,3 +4,9 @@
   service:
     name: apache2
     state: restarted
+
+- name: Clear Mason cache
+  file:
+    path: /opt/rt4/var/mason_data/obj
+    state: absent
+  notify: Restart Apache
