@@ -48,6 +48,6 @@
     chdir: /tmp/rt-4.2.12
 
 - name: Initialize RT database
-  shell: echo "root" | make initialize-database
+  shell: echo {{ mariadb_root_password }} | make initialize-database
   args:
     chdir: /tmp/rt-4.2.12
