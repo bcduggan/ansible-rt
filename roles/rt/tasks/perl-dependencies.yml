@@ -286,7 +286,7 @@
 - name: Install RT GnuPG dependency File::Which
   apt:
     name: libfile-which-perl
-     state: present
+    state: present
 
 - name: Install RT GnuPG dependency GnuPG::Interface
   apt:
