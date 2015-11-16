@@ -16,7 +16,13 @@
     creates: /tmp/rt-4.2.12
 
 - name: Configure RT
-  shell: ./configure
+  shell: >
+    ./configure
+    --enable-developer
+    --enable-graphviz
+    --enable-gd
+    --enable-gpg
+    --enable-smime
   args:
     chdir: /tmp/rt-4.2.12
     ## Creates this file, among many others. Should all be listed?

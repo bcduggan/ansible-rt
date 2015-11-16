@@ -10,345 +10,440 @@
     name: perl-doc
     state: present
 
-- name: Install RT dependency Term::ReadKey
+- name: Install RT core dependency Term::ReadKey
   apt:
     name: libterm-readkey-perl
     state: present
 
-- name: Install RT dependency File::ShareDir
+- name: Install RT core dependency File::ShareDir
   apt:
     name: libfile-sharedir-perl
     state: present
 
-- name: Install RT dependency Devel::GlobalDestruction
+- name: Install RT core dependency Devel::GlobalDestruction
   apt:
     name: libdevel-globaldestruction-perl
     state: present
 
-- name: Install RT dependency Plack
+- name: Install RT core dependency Plack
   apt:
     name: libplack-perl
     state: present
 
-- name: Install RT dependency Data::GUID
+- name: Install RT core dependency Data::GUID
   apt:
     name: libdata-guid-perl
     state: present
 
-- name: Install RT dependency DateTime::Format::Natural
+- name: Install RT core dependency DateTime::Format::Natural
   apt:
     name: libdatetime-format-natural-perl
     state: present
 
-- name: Install RT dependency Net::CIDR
+- name: Install RT core dependency Net::CIDR
   apt:
     name: libnet-cidr-perl
     state: present
 
-- name: Install RT dependency Devel::StackTrace
+- name: Install RT core dependency Devel::StackTrace
   apt:
     name: libdevel-stacktrace-perl
     state: present
     
-- name: Install RT dependency Apache::Session
+- name: Install RT core dependency Apache::Session
   apt:
     name: libapache-session-perl
     state: present
 
-- name: Install RT dependency Text::WikiFormat
+- name: Install RT core dependency Text::WikiFormat
   apt:
     name: libtext-wikiformat-perl
     state: present
 
-- name: Install RT dependency HTML::Mason
+- name: Install RT core dependency HTML::Mason
   apt:
     name: libhtml-mason-perl
     state: present
 
-- name: Install RT dependency CGI::Emulate::PSGI
+- name: Install RT core dependency CGI::Emulate::PSGI
   apt:
     name: libcgi-emulate-psgi-perl
     state: present
 
-- name: Install RT dependency IPC::Run
+- name: Install RT core dependency IPC::Run
   apt:
     name: libipc-run-perl
     state: present
 
-- name: Install RT dependency IPC::Run3
+- name: Install RT core dependency IPC::Run3
   apt:
     name: libipc-run3-perl
     state: present
 
-- name: Install RT dependency Crypt::Eksblowfish
+- name: Install RT core dependency Crypt::Eksblowfish
   apt:
     name: libcrypt-eksblowfish-perl
     state: present
 
-- name: Install RT dependency Module::Versions::Report
+- name: Install RT core dependency Module::Versions::Report
   apt:
     name: libmodule-versions-report-perl
     state: present
 
-- name: Install RT dependency HTML::Quoted
+- name: Install RT core dependency HTML::Quoted
   apt:
     name: libhtml-quoted-perl
     state: present
 
-- name: Install RT dependency HTML::FormatText::WithLinks::AndTables
+- name: Install RT core dependency HTML::FormatText::WithLinks::AndTables
   apt:
     name: libhtml-formattext-withlinks-andtables-perl
     state: present
 
-- name: Install RT dependency Text::Password::Pronounceable
+- name: Install RT core dependency Text::Password::Pronounceable
   apt:
     name: libtext-password-pronounceable-perl
     state: present
 
-- name: Install RT dependency Locale::Maketext::Lexicon
+- name: Install RT core dependency Locale::Maketext::Lexicon
   apt:
     name: liblocale-maketext-lexicon-perl
     state: present
 
-- name: Install RT dependency Text::Template
+- name: Install RT core dependency Text::Template
   apt:
     name: libtext-template-perl
     state: present
 
-- name: Install RT dependency HTML::RewriteAttributes
+- name: Install RT core dependency HTML::RewriteAttributes
   apt:
     name: libhtml-rewriteattributes-perl
     state: present
 
-- name: Install RT dependency Text::Wrapper
+- name: Install RT core dependency Text::Wrapper
   apt:
     name: libtext-wrapper-perl
     state: present
 
-- name: Install RT dependency Locale::Maketext::Fuzzy
+- name: Install RT core dependency Locale::Maketext::Fuzzy
   apt:
     name: liblocale-maketext-fuzzy-perl
     state: present
 
-- name: Install RT dependency HTML::Mason::PSGIHandler
+- name: Install RT core dependency HTML::Mason::PSGIHandler
   apt:
     name: libhtml-mason-psgihandler-perl
     state: present
 
-- name: Install RT dependency Email::Address
+- name: Install RT core dependency Email::Address
   apt:
     name: libemail-address-perl
     state: present
 
-- name: Install RT dependency XML::RSS
+- name: Install RT core dependency XML::RSS
   apt:
     name: libxml-rss-perl
     state: present
 
-- name: Install RT dependency HTML::Scrubber
+- name: Install RT core dependency HTML::Scrubber
   apt:
     name: libhtml-scrubber-perl
     state: present
 
-- name: Install RT dependency DateTime::Locale
+- name: Install RT core dependency DateTime::Locale
   apt:
     name: libdatetime-locale-perl
     state: present
 
-- name: Install RT dependency CGI::PSGI
+- name: Install RT core dependency CGI::PSGI
   apt:
     name: libcgi-psgi-perl
     state: present
 
-- name: Install RT dependency List::MoreUtils
+- name: Install RT core dependency List::MoreUtils
   apt:
     name: liblist-moreutils-perl
     state: present
 
-- name: Install RT dependency DBIx::SearchBuilder
+- name: Install RT core dependency DBIx::SearchBuilder
   apt:
     name: libdbix-searchbuilder-perl
     state: present
 
-- name: Install RT dependency CSS::Squish
+- name: Install RT core dependency CSS::Squish
   apt:
     name: libcss-squish-perl
     state: present
 
-- name: Install RT dependency DateTime
+- name: Install RT core dependency DateTime
   apt:
     name: libdatetime-perl
     state: present
 
-- name: Install RT dependency JSON
+- name: Install RT core dependency JSON
   apt:
     name: libjson-perl
     state: present
 
-- name: Install RT dependency HTTP::Message
+- name: Install RT core dependency HTTP::Message
   apt:
     name: libhttp-message-perl
     state: present
 
-- name: Install RT dependency Log::Dispatch
+- name: Install RT core dependency Log::Dispatch
   apt:
     name: liblog-dispatch-perl
     state: present
 
-- name: Install RT dependency UNIVERSAL::require
+- name: Install RT core dependency UNIVERSAL::require
   apt:
     name: libuniversal-require-perl
     state: present
 
-- name: Install RT dependency Locale::Maketext
+- name: Install RT core dependency Locale::Maketext
   apt:
     name: liblocale-maketext-gettext-perl
     state: present
 
-- name: Install RT dependency Regexp::IPv6
+- name: Install RT core dependency Regexp::IPv6
   apt:
     name: libregexp-ipv6-perl
     state: present
 
-- name: Install RT dependency Regexp::Common::net::CIDR
+- name: Install RT core dependency Regexp::Common::net::CIDR
   apt:
     name: libregexp-common-net-cidr-perl
     state: present
 
-- name: Install RT dependency Tree::Simple
+- name: Install RT core dependency Tree::Simple
   apt:
     name: libtree-simple-perl
     state: present
 
-- name: Install RT dependency Date::Manip
+- name: Install RT core dependency Date::Manip
   apt:
     name: libdate-manip-perl
     state: present
 
-- name: Install RT dependency Text::Quoted
+- name: Install RT core dependency Text::Quoted
   apt:
     name: libstring-shellquote-perl
     state: present
 
-- name: Install RT dependency Time::ParseDate
+- name: Install RT core dependency Time::ParseDate
   apt:
     name: libtime-parsedate-perl
     state: present
 
-- name: Install RT dependency Encode
+- name: Install RT core dependency Encode
   apt:
     name: libencode-perl
     state: present
 
-- name: Install RT dependency Symbol::Global::Name
+- name: Install RT core dependency Symbol::Global::Name
   apt:
     name: libsymbol-global-name-perl
     state: present
 
-- name: Install RT dependency Role::Basic
+- name: Install RT core dependency Role::Basic
   apt:
     name: librole-basic-perl
     state: present
 
-- name: Install RT dependency Email::Address::List
+- name: Install RT core dependency Email::Address::List
   apt:
     name: libemail-address-list-perl
     state: present
 
-- name: Install RT dependency Date::Extract
+- name: Install RT core dependency Date::Extract
   apt:
     name: libdate-extract-perl
     state: present
 
-- name: Install RT dependency Text::Quoted
+- name: Install RT core dependency Text::Quoted
   apt:
     name: libtext-quoted-perl
     state: present
 
-- name: Install RT dependency MIME::Entity
+- name: Install RT core dependency MIME::Entity
   apt:
     name: libmime-tools-perl
     state: present
 
 # DASHBOARDS dependencies
-- name: Install RT dependency MIME::Types
+- name: Install RT dashboard dependency MIME::Types
   apt:
     name: libmime-types-perl
     state: present
 
 # FASTCGI dependencies
-- name: Install RT dependency FCGI::ProcManager
+- name: Install RT FastCGI dependency FCGI::ProcManager
   apt:
     name: libfcgi-procmanager-perl
     state: present
 
 # GPG dependencies
-- name: Install RT dependency File::Which
+- name: Install RT GnuPG dependency File::Which
   apt:
     name: libfile-which-perl
-    state: present
+     state: present
 
-- name: Install RT dependency GnuPG::Interface
+- name: Install RT GnuPG dependency GnuPG::Interface
   apt:
     name: libgnupg-interface-perl
     state: present
 
-- name: Install RT dependency PerlIO::eol
+- name: Install RT GnuPG dependency PerlIO::eol
   apt:
     name: libperlio-eol-perl
     state: present
 
 # ICAL dependencies
-- name: Install RT dependency Data::ICal
+- name: Install RT iCal dependency Data::ICal
   apt:
     name: libdata-ical-perl
     state: present
 
 # MAILGATE dependencies
-- name: Install RT dependency Net::SSL
+- name: Install RT mailgate dependency Net::SSL
   apt:
     name: libnet-ssleay-perl
     state: present
 
-- name: Install RT dependency Crypt::SSLeay
+- name: Install RT mailgate dependency Crypt::SSLeay
   apt:
     name: libcrypt-ssleay-perl
     state: present
 
 # SMIME dependencies
-- name: Install RT dependency Crypt::X509
+- name: Install RT SMIME dependency Crypt::X509
   apt:
     name: libcrypt-x509-perl
     state: present
 
-- name: Install RT dependency String::ShellQuote
+- name: Install RT SMIME dependency String::ShellQuote
   apt:
     name: libstring-shellquote-perl
     state: present
 
 # USERLOGO dependencies
-- name: Install RT dependency Convert::Color
+- name: Install RT userlogo dependency Convert::Color
   apt:
     name: libconvert-color-perl
     state: present
 
-# aptitude install \
-# libterm-readkey-perl \
-# libwww-perl \
-# libdbi-perl \
-# libtime-modules-perl \
-# libnamespace-clean-perl \
-# libclass-accessor-perl \
-# libregexp-common-perl \
-# libtext-quoted-perl \
-# libmime-tools-perl \
-# libtest-email-perl \
-# libfcgi-perl \
-# libgd-gd2-perl \
-# libgd-graph-perl \
-# libgd-graph3d-perl \
-# libgd-text-perl \
-# libgraphviz-perl \
+# DEVELOPER mode dependencies
+- name: Install RT developer-mode dependency Mojo::DOM
+  apt:
+    name: libmojolicious-perl
+    state: present
+
+- name: Install RT developer-mode dependency Email::Abstract
+  apt:
+    name: libemail-abstract-perl
+    state: present
+
+- name: Install RT developer-mode dependency Test::LongString
+  apt:
+    name: libtest-longstring-perl
+    state: present
+
+- name: Install RT developer-mode dependency Log::Dispatch::Perl
+  apt:
+    name: liblog-dispatch-perl-perl
+    state: present
+
+- name: Install RT developer-mode dependency Test::Deep
+  apt:
+    name: libtest-deep-perl
+    state: present
+
+- name: Install RT developer-mode dependency WWW::Mechanize
+  apt:
+    name: libwww-mechanize-perl
+    state: present
+
+- name: Install RT developer-mode dependency Test::Email
+  apt:
+    name: libtest-email-perl
+    state: present
+
+- name: Install RT developer-mode dependency Locale::PO
+  apt:
+    name: liblocale-po-perl
+    state: present
+
+- name: Install RT developer-mode dependency Test::MockTime
+  apt:
+    name: libtest-expect-perl
+    state: present
+
+- name: Install RT developer-mode dependency XML::Simple
+  apt:
+    name: libxml-simple-perl
+    state: present
+
+- name: Install RT developer-mode dependency Set::Tiny
+  apt:
+    name: libset-tiny-perl
+    state: present
+
+- name: Install RT developer-mode dependency Test::Pod
+  apt:
+    name: libtest-pod-perl
+    state: present
+
+- name: Install RT developer-mode dependency Test::Warn
+  apt:
+    name: libtest-warn-perl
+    state: present
+
+- name: Install RT developer-mode dependency Test::MockTime
+  apt:
+    name: libtest-mocktime-perl
+    state: present
+    
+- name: Install RT developer-mode dependency Test::WWW::Mechanize
+  apt:
+    name: libtest-www-mechanize-perl
+    state: present
+
+- name: Install RT developer-mode dependency Test::WWW::Mechanize::PSGI
+  apt:
+    name: libtest-www-mechanize-psgi-perl
+    state: present
+
+- name: Install RT developer-mode dependency Test::NoWarnings
+  apt:
+    name: libtest-nowarnings-perl
+    state: present
+    
+- name: Install RT developer-mode dependency Plack::Middleware::Test::StashWarnings
+  apt:
+    name: libplack-middleware-test-stashwarnings-perl
+    state: present
+
+# GRAPHVIZ dependencies
+- name: Install RT GraphViz dependency GraphViz
+  apt:
+    name: libgraphviz-perl
+    state: present
+
+# GD dependencies
+- name: Install RT GD dependency GD
+  apt:
+    name: libgd-perl
+    state: present
+
+- name: Install RT GD dependency GD::Text
+  apt:
+    name: libgd-text-perl
+    state: present
+
+- name: Install RT GD dependency GD::Graph
+  apt:
+    name: libgd-graph-perl
+    state: present
 
 
 
