@@ -9,5 +9,4 @@
         key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
   
   roles:
-    - deimosfr.mariadb
     - rt
