@@ -10,267 +10,65 @@
     name: perl-doc
     state: present
 
-- name: Install RT core dependency Term::ReadKey
+- name: Install RT core dependency {{ item.perl_pkg }}
   apt:
-    name: libterm-readkey-perl
+    name: "{{ item.apt_pkg }}"
     state: present
+    with_items:
+      - { perl_pkg: 'Term::ReadKey', apt_pkg: 'libterm-readkey-perl' }
+      - { perl_pkg: 'File::SharDir', apt_pkg: 'libfile-sharedir-perl' }
+      - { perl_pkg: 'Devel::GlobalDestruction', apt_pkg: 'libdevel-globaldestruction-perl' }
+      - { perl_pkg: 'Plack', apt_pkg: 'libplack-perl' }
+      - { perl_pkg: 'Data::GUID', apt_pkg: 'libdata-guid-perl' }
+      - { perl_pkg: 'DateTime::Format::Natural', apt_pkg: 'libdatetime-format-natural-perl' }
+      - { perl_pkg: 'Net::CIDR', apt_pkg: 'libnet-cidr-perl' }
+      - { perl_pkg: 'Devel::StackTrace', apt_pkg: 'libdevel-stacktrace-perl' }
+      - { perl_pkg: 'Apache::Session', apt_pkg: 'libapache-session-perl' }
+      - { perl_pkg: 'Text::WikiFormat', apt_pkg: 'libtext-wikiformat-perl' }
+      - { perl_pkg: 'HTML::Mason', apt_pkg: 'libhtml-mason-perl' }
+      - { perl_pkg: 'CGI::Emulate::PSGI', apt_pkg: 'libcgi-emulate-psgi-perl' }
+      - { perl_pkg: 'IPC::Run', apt_pkg: 'libipc-run-perl' }
+      - { perl_pkg: 'IPC::Run3', apt_pkg: 'libipc-run3-perl' }
+      - { perl_pkg: 'Crypt::Eksblowfish', apt_pkg: 'libcrypt-eksblowfish-perl' }
+      - { perl_pkg: 'Module::Versions::Report', apt_pkg: 'libmodule-versions-report-perl'}
+      - { perl_pkg: 'HTML::Quoted', apt_pkg: 'libhtml-quoted-perl' }
+      - { perl_pkg: 'HTML::FormatText::WithLinks::AndTables', apt_pkg: 'libhtml-formattext-withlinks-andtables-perl' }
+      - { perl_pkg: 'Text::Password::Pronounceable', apt_pkg: 'libtext-password-pronounceable-perl' }
+      - { perl_pkg: 'Locale::Maketext::Lexicon', apt_pkg: 'liblocale-maketext-lexicon-perl' }
+      - { perl_pkg: 'Text::Template', apt_pkg: 'libtext-template-perl' }
+      - { perl_pkg: 'HTML::RewriteAttributes', apt_pkg: 'libhtml-rewriteattributes-perl' }
+      - { perl_pkg: 'Text::Wrapper', apt_pkg: 'libtext-wrapper-perl' }
+      - { perl_pkg: 'Locale::Maketext::Fuzzy', apt_pkg: 'liblocale-maketext-fuzzy-perl' }
+      - { perl_pkg: 'HTML::Mason::PSGIHandler', apt_pkg: 'libhtml-mason-psgihandler-perl' }
+      - { perl_pkg: 'Email::Address', apt_pkg: 'libemail-address-perl' }
+      - { perl_pkg: 'XML::RSS', apt_pkg: 'libxml-rss-perl' }
+      - { perl_pkg: 'HTML::Scrubber', apt_pkg: 'libhtml-scrubber-perl' }
+      - { perl_pkg: 'DateTime::Locale', apt_pkg: 'libdatetime-locale-perl' }
+      - { perl_pkg: 'CGI::PSGI', apt_pkg: 'libcgi-psgi-perl' }
+      - { perl_pkg: 'List::MoreUtils', apt_pkg: 'liblist-moreutils-perl' }
+      - { perl_pkg: 'DBIx::SearchBuilder', apt_pkg: 'libdbix-searchbuilder-perl' }
+      - { perl_pkg: 'CSS::Squish', apt_pkg: 'libcss-squish-perl' }
+      - { perl_pkg: 'DateTime', apt_pkg: 'libdatetime-perl' }
+      - { perl_pkg: 'JSON', apt_pkg: 'libjson-perl' }
+      - { perl_pkg: 'HTTP::Message', apt_pkg: 'libhttp-message-perl' }
+      - { perl_pkg: 'Log::Dispatch', apt_pkg: 'liblog-dispatch-perl' }
+      - { perl_pkg: 'UNIVERSAL::require', apt_pkg: 'libuniversal-require-perl' }
+      - { perl_pkg: 'Locale::Maketext', apt_pkg: 'liblocale-maketext-gettext-perl' }
+      - { perl_pkg: 'Regexp::IPv6', apt_pkg: 'libregexp-ipv6-perl' }
+      - { perl_pkg: 'Regexp::Common::net::CIDR', apt_pkg: 'libregexp-common-net-cidr-perl' }
+      - { perl_pkg: 'Tree::Simple', apt_pkg: 'libtree-simple-perl' }
+      - { perl_pkg: 'Date::Manip', apt_pkg: 'libdate-manip-perl' }
+      - { perl_pkg: 'Text::Quoted', apt_pkg: 'libstring-shellquote-perl' }
+      - { perl_pkg: 'Time::ParseDate', apt_pkg: 'libtime-parsedate-perl' }
+      - { perl_pkg: 'Encode', apt_pkg: 'libencode-perl' }
+      - { perl_pkg: 'Symbol::Global::Name', apt_pkg: 'libsymbol-global-name-perl' }
+      - { perl_pkg: 'Role::Basic', apt_pkg: 'librole-basic-perl' }
+      - { perl_pkg: 'Email::Address::List', apt_pkg: 'libemail-address-list-perl' }
+      - { perl_pkg: 'Date::Extract', apt_pkg: 'libdate-extract-perl' }
+      - { perl_pkg: 'Text::Quoted', apt_pkg: 'libtext-quoted-perl' }
+      - { perl_pkg: 'MIME::Entity', apt_pkg: 'libmime-tools-perl' }
 
-- name: Install RT core dependency File::ShareDir
-  apt:
-    name: libfile-sharedir-perl
-    state: present
-
-- name: Install RT core dependency Devel::GlobalDestruction
-  apt:
-    name: libdevel-globaldestruction-perl
-    state: present
-
-- name: Install RT core dependency Plack
-  apt:
-    name: libplack-perl
-    state: present
-
-- name: Install RT core dependency Data::GUID
-  apt:
-    name: libdata-guid-perl
-    state: present
-
-- name: Install RT core dependency DateTime::Format::Natural
-  apt:
-    name: libdatetime-format-natural-perl
-    state: present
-
-- name: Install RT core dependency Net::CIDR
-  apt:
-    name: libnet-cidr-perl
-    state: present
-
-- name: Install RT core dependency Devel::StackTrace
-  apt:
-    name: libdevel-stacktrace-perl
-    state: present
-    
-- name: Install RT core dependency Apache::Session
-  apt:
-    name: libapache-session-perl
-    state: present
-
-- name: Install RT core dependency Text::WikiFormat
-  apt:
-    name: libtext-wikiformat-perl
-    state: present
-
-- name: Install RT core dependency HTML::Mason
-  apt:
-    name: libhtml-mason-perl
-    state: present
-
-- name: Install RT core dependency CGI::Emulate::PSGI
-  apt:
-    name: libcgi-emulate-psgi-perl
-    state: present
-
-- name: Install RT core dependency IPC::Run
-  apt:
-    name: libipc-run-perl
-    state: present
-
-- name: Install RT core dependency IPC::Run3
-  apt:
-    name: libipc-run3-perl
-    state: present
-
-- name: Install RT core dependency Crypt::Eksblowfish
-  apt:
-    name: libcrypt-eksblowfish-perl
-    state: present
-
-- name: Install RT core dependency Module::Versions::Report
-  apt:
-    name: libmodule-versions-report-perl
-    state: present
-
-- name: Install RT core dependency HTML::Quoted
-  apt:
-    name: libhtml-quoted-perl
-    state: present
-
-- name: Install RT core dependency HTML::FormatText::WithLinks::AndTables
-  apt:
-    name: libhtml-formattext-withlinks-andtables-perl
-    state: present
-
-- name: Install RT core dependency Text::Password::Pronounceable
-  apt:
-    name: libtext-password-pronounceable-perl
-    state: present
-
-- name: Install RT core dependency Locale::Maketext::Lexicon
-  apt:
-    name: liblocale-maketext-lexicon-perl
-    state: present
-
-- name: Install RT core dependency Text::Template
-  apt:
-    name: libtext-template-perl
-    state: present
-
-- name: Install RT core dependency HTML::RewriteAttributes
-  apt:
-    name: libhtml-rewriteattributes-perl
-    state: present
-
-- name: Install RT core dependency Text::Wrapper
-  apt:
-    name: libtext-wrapper-perl
-    state: present
-
-- name: Install RT core dependency Locale::Maketext::Fuzzy
-  apt:
-    name: liblocale-maketext-fuzzy-perl
-    state: present
-
-- name: Install RT core dependency HTML::Mason::PSGIHandler
-  apt:
-    name: libhtml-mason-psgihandler-perl
-    state: present
-
-- name: Install RT core dependency Email::Address
-  apt:
-    name: libemail-address-perl
-    state: present
-
-- name: Install RT core dependency XML::RSS
-  apt:
-    name: libxml-rss-perl
-    state: present
-
-- name: Install RT core dependency HTML::Scrubber
-  apt:
-    name: libhtml-scrubber-perl
-    state: present
-
-- name: Install RT core dependency DateTime::Locale
-  apt:
-    name: libdatetime-locale-perl
-    state: present
-
-- name: Install RT core dependency CGI::PSGI
-  apt:
-    name: libcgi-psgi-perl
-    state: present
-
-- name: Install RT core dependency List::MoreUtils
-  apt:
-    name: liblist-moreutils-perl
-    state: present
-
-- name: Install RT core dependency DBIx::SearchBuilder
-  apt:
-    name: libdbix-searchbuilder-perl
-    state: present
-
-- name: Install RT core dependency CSS::Squish
-  apt:
-    name: libcss-squish-perl
-    state: present
-
-- name: Install RT core dependency DateTime
-  apt:
-    name: libdatetime-perl
-    state: present
-
-- name: Install RT core dependency JSON
-  apt:
-    name: libjson-perl
-    state: present
-
-- name: Install RT core dependency HTTP::Message
-  apt:
-    name: libhttp-message-perl
-    state: present
-
-- name: Install RT core dependency Log::Dispatch
-  apt:
-    name: liblog-dispatch-perl
-    state: present
-
-- name: Install RT core dependency UNIVERSAL::require
-  apt:
-    name: libuniversal-require-perl
-    state: present
-
-- name: Install RT core dependency Locale::Maketext
-  apt:
-    name: liblocale-maketext-gettext-perl
-    state: present
-
-- name: Install RT core dependency Regexp::IPv6
-  apt:
-    name: libregexp-ipv6-perl
-    state: present
-
-- name: Install RT core dependency Regexp::Common::net::CIDR
-  apt:
-    name: libregexp-common-net-cidr-perl
-    state: present
-
-- name: Install RT core dependency Tree::Simple
-  apt:
-    name: libtree-simple-perl
-    state: present
-
-- name: Install RT core dependency Date::Manip
-  apt:
-    name: libdate-manip-perl
-    state: present
-
-- name: Install RT core dependency Text::Quoted
-  apt:
-    name: libstring-shellquote-perl
-    state: present
-
-- name: Install RT core dependency Time::ParseDate
-  apt:
-    name: libtime-parsedate-perl
-    state: present
-
-- name: Install RT core dependency Encode
-  apt:
-    name: libencode-perl
-    state: present
-
-- name: Install RT core dependency Symbol::Global::Name
-  apt:
-    name: libsymbol-global-name-perl
-    state: present
-
-- name: Install RT core dependency Role::Basic
-  apt:
-    name: librole-basic-perl
-    state: present
-
-- name: Install RT core dependency Email::Address::List
-  apt:
-    name: libemail-address-list-perl
-    state: present
-
-- name: Install RT core dependency Date::Extract
-  apt:
-    name: libdate-extract-perl
-    state: present
-
-- name: Install RT core dependency Text::Quoted
-  apt:
-    name: libtext-quoted-perl
-    state: present
-
-- name: Install RT core dependency MIME::Entity
-  apt:
-    name: libmime-tools-perl
-    state: present
-
-# DASHBOARDS dependencies
+^# DASHBOARDS dependencies
 - name: Install RT dashboard dependency MIME::Types
   apt:
     name: libmime-types-perl
