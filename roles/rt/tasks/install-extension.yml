@@ -1,6 +1,6 @@
 ---
 
-- name: Download {{ ext.perl_pkg }}
+- name: Download RT extension tarball
   get_url:
     url: "{{ ext.url_base }}/{{ ext.name }}-{{ ext.version }}.tar.gz"
     dest: /tmp/{{ ext.name }}-{{ ext.version }}.tar.gz
@@ -8,36 +8,36 @@
     sha256sum: "{{ ext.checksum }}"
     force: no
 
-- name: Untar and ungzip {{ ext.perl_pkg }}
+- name: Untar and ungzip RT extension tarball
   unarchive:
     copy: no
     src: /tmp/{{ ext.name }}-{{ ext.version }}.tar.gz
     dest: /tmp
-    creates: /tmp/{ name }}-{{ ext.version }}
+    creates: /tmp/{{ ext.name }}-{{ ext.version }}
 
-- name: Make {{ ext.perl_pkg }} Makefile
+- name: Generate RT extension Makefile
   command: perl Makefile.PL
   args:
     chdir: /tmp/{{ ext.name }}-{{ ext.version }}
     creates: /tmp/{{ ext.name }}-{{ ext.version }}/Makefile
 
-- name: Make {{ ext.perl_pkg }}
+- name: Build RT extension
   command: make
   args:
     chdir: /tmp/{{ ext.name }}-{{ ext.version }}
     #creates: /tmp/{{ ext.name }}-{{ ext.version }}/blib/lib/RT/Extension/ResetPassword.pm
   
-- name: Install {{ ext.perl_pkg }}
+- name: Install RT extension
   command: make install
   args:
     chdir: /tmp/{{ ext.name }}-{{ ext.version }}
 
-- name: Initialize {{ ext.perl_pkg }} database
+- name: Initialize RT extension database
   shell: echo {{ mariadb_root_password }} | make initdb
   args:
     chdir: /tmp/{{ ext.name }}-{{ ext.version }}
 
-- name: Enable {{ ext.perl_pkg }} in RT_SiteConfig.pm
+- name: Enable RT extension in RT_SiteConfig.pm
   lineinfile:
     dest: /opt/rt4/etc/RT_SiteConfig.pm
     line: Plugin('{{ ext.perl_pkg }}');
