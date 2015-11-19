@@ -1,249 +1,92 @@
 ---
-# CORE dependencies
-- name: Install autoconf
+- name: Install RT dependencies
   apt:
-    name: autoconf
+    name: "{{ item }}"
     state: present
-
-- name: Install perl-doc
-  apt:
-    name: perl-doc
-    state: present
-
-- name: Install RT core dependency {{ item.perl_pkg }}
-  apt:
-    name: "{{ item.apt_pkg }}"
-    state: present
-    with_items:
-      - { perl_pkg: 'Term::ReadKey', apt_pkg: 'libterm-readkey-perl' }
-      - { perl_pkg: 'File::SharDir', apt_pkg: 'libfile-sharedir-perl' }
-      - { perl_pkg: 'Devel::GlobalDestruction', apt_pkg: 'libdevel-globaldestruction-perl' }
-      - { perl_pkg: 'Plack', apt_pkg: 'libplack-perl' }
-      - { perl_pkg: 'Data::GUID', apt_pkg: 'libdata-guid-perl' }
-      - { perl_pkg: 'DateTime::Format::Natural', apt_pkg: 'libdatetime-format-natural-perl' }
-      - { perl_pkg: 'Net::CIDR', apt_pkg: 'libnet-cidr-perl' }
-      - { perl_pkg: 'Devel::StackTrace', apt_pkg: 'libdevel-stacktrace-perl' }
-      - { perl_pkg: 'Apache::Session', apt_pkg: 'libapache-session-perl' }
-      - { perl_pkg: 'Text::WikiFormat', apt_pkg: 'libtext-wikiformat-perl' }
-      - { perl_pkg: 'HTML::Mason', apt_pkg: 'libhtml-mason-perl' }
-      - { perl_pkg: 'CGI::Emulate::PSGI', apt_pkg: 'libcgi-emulate-psgi-perl' }
-      - { perl_pkg: 'IPC::Run', apt_pkg: 'libipc-run-perl' }
-      - { perl_pkg: 'IPC::Run3', apt_pkg: 'libipc-run3-perl' }
-      - { perl_pkg: 'Crypt::Eksblowfish', apt_pkg: 'libcrypt-eksblowfish-perl' }
-      - { perl_pkg: 'Module::Versions::Report', apt_pkg: 'libmodule-versions-report-perl'}
-      - { perl_pkg: 'HTML::Quoted', apt_pkg: 'libhtml-quoted-perl' }
-      - { perl_pkg: 'HTML::FormatText::WithLinks::AndTables', apt_pkg: 'libhtml-formattext-withlinks-andtables-perl' }
-      - { perl_pkg: 'Text::Password::Pronounceable', apt_pkg: 'libtext-password-pronounceable-perl' }
-      - { perl_pkg: 'Locale::Maketext::Lexicon', apt_pkg: 'liblocale-maketext-lexicon-perl' }
-      - { perl_pkg: 'Text::Template', apt_pkg: 'libtext-template-perl' }
-      - { perl_pkg: 'HTML::RewriteAttributes', apt_pkg: 'libhtml-rewriteattributes-perl' }
-      - { perl_pkg: 'Text::Wrapper', apt_pkg: 'libtext-wrapper-perl' }
-      - { perl_pkg: 'Locale::Maketext::Fuzzy', apt_pkg: 'liblocale-maketext-fuzzy-perl' }
-      - { perl_pkg: 'HTML::Mason::PSGIHandler', apt_pkg: 'libhtml-mason-psgihandler-perl' }
-      - { perl_pkg: 'Email::Address', apt_pkg: 'libemail-address-perl' }
-      - { perl_pkg: 'XML::RSS', apt_pkg: 'libxml-rss-perl' }
-      - { perl_pkg: 'HTML::Scrubber', apt_pkg: 'libhtml-scrubber-perl' }
-      - { perl_pkg: 'DateTime::Locale', apt_pkg: 'libdatetime-locale-perl' }
-      - { perl_pkg: 'CGI::PSGI', apt_pkg: 'libcgi-psgi-perl' }
-      - { perl_pkg: 'List::MoreUtils', apt_pkg: 'liblist-moreutils-perl' }
-      - { perl_pkg: 'DBIx::SearchBuilder', apt_pkg: 'libdbix-searchbuilder-perl' }
-      - { perl_pkg: 'CSS::Squish', apt_pkg: 'libcss-squish-perl' }
-      - { perl_pkg: 'DateTime', apt_pkg: 'libdatetime-perl' }
-      - { perl_pkg: 'JSON', apt_pkg: 'libjson-perl' }
-      - { perl_pkg: 'HTTP::Message', apt_pkg: 'libhttp-message-perl' }
-      - { perl_pkg: 'Log::Dispatch', apt_pkg: 'liblog-dispatch-perl' }
-      - { perl_pkg: 'UNIVERSAL::require', apt_pkg: 'libuniversal-require-perl' }
-      - { perl_pkg: 'Locale::Maketext', apt_pkg: 'liblocale-maketext-gettext-perl' }
-      - { perl_pkg: 'Regexp::IPv6', apt_pkg: 'libregexp-ipv6-perl' }
-      - { perl_pkg: 'Regexp::Common::net::CIDR', apt_pkg: 'libregexp-common-net-cidr-perl' }
-      - { perl_pkg: 'Tree::Simple', apt_pkg: 'libtree-simple-perl' }
-      - { perl_pkg: 'Date::Manip', apt_pkg: 'libdate-manip-perl' }
-      - { perl_pkg: 'Text::Quoted', apt_pkg: 'libstring-shellquote-perl' }
-      - { perl_pkg: 'Time::ParseDate', apt_pkg: 'libtime-parsedate-perl' }
-      - { perl_pkg: 'Encode', apt_pkg: 'libencode-perl' }
-      - { perl_pkg: 'Symbol::Global::Name', apt_pkg: 'libsymbol-global-name-perl' }
-      - { perl_pkg: 'Role::Basic', apt_pkg: 'librole-basic-perl' }
-      - { perl_pkg: 'Email::Address::List', apt_pkg: 'libemail-address-list-perl' }
-      - { perl_pkg: 'Date::Extract', apt_pkg: 'libdate-extract-perl' }
-      - { perl_pkg: 'Text::Quoted', apt_pkg: 'libtext-quoted-perl' }
-      - { perl_pkg: 'MIME::Entity', apt_pkg: 'libmime-tools-perl' }
-
-^# DASHBOARDS dependencies
-- name: Install RT dashboard dependency MIME::Types
-  apt:
-    name: libmime-types-perl
-    state: present
-
-# FASTCGI dependencies
-- name: Install RT FastCGI dependency FCGI::ProcManager
-  apt:
-    name: libfcgi-procmanager-perl
-    state: present
-
-# GPG dependencies
-- name: Install RT GnuPG dependency File::Which
-  apt:
-    name: libfile-which-perl
-    state: present
-
-- name: Install RT GnuPG dependency GnuPG::Interface
-  apt:
-    name: libgnupg-interface-perl
-    state: present
-
-- name: Install RT GnuPG dependency PerlIO::eol
-  apt:
-    name: libperlio-eol-perl
-    state: present
-
-# ICAL dependencies
-- name: Install RT iCal dependency Data::ICal
-  apt:
-    name: libdata-ical-perl
-    state: present
-
-# MAILGATE dependencies
-- name: Install RT mailgate dependency Net::SSL
-  apt:
-    name: libnet-ssleay-perl
-    state: present
-
-- name: Install RT mailgate dependency Crypt::SSLeay
-  apt:
-    name: libcrypt-ssleay-perl
-    state: present
-
-# SMIME dependencies
-- name: Install RT SMIME dependency Crypt::X509
-  apt:
-    name: libcrypt-x509-perl
-    state: present
-
-- name: Install RT SMIME dependency String::ShellQuote
-  apt:
-    name: libstring-shellquote-perl
-    state: present
-
-# USERLOGO dependencies
-- name: Install RT userlogo dependency Convert::Color
-  apt:
-    name: libconvert-color-perl
-    state: present
-
-# DEVELOPER mode dependencies
-- name: Install RT developer-mode dependency Mojo::DOM
-  apt:
-    name: libmojolicious-perl
-    state: present
-
-- name: Install RT developer-mode dependency Email::Abstract
-  apt:
-    name: libemail-abstract-perl
-    state: present
-
-- name: Install RT developer-mode dependency Test::LongString
-  apt:
-    name: libtest-longstring-perl
-    state: present
-
-- name: Install RT developer-mode dependency Log::Dispatch::Perl
-  apt:
-    name: liblog-dispatch-perl-perl
-    state: present
-
-- name: Install RT developer-mode dependency Test::Deep
-  apt:
-    name: libtest-deep-perl
-    state: present
-
-- name: Install RT developer-mode dependency WWW::Mechanize
-  apt:
-    name: libwww-mechanize-perl
-    state: present
-
-- name: Install RT developer-mode dependency Test::Email
-  apt:
-    name: libtest-email-perl
-    state: present
-
-- name: Install RT developer-mode dependency Locale::PO
-  apt:
-    name: liblocale-po-perl
-    state: present
-
-- name: Install RT developer-mode dependency Test::MockTime
-  apt:
-    name: libtest-expect-perl
-    state: present
-
-- name: Install RT developer-mode dependency XML::Simple
-  apt:
-    name: libxml-simple-perl
-    state: present
-
-- name: Install RT developer-mode dependency Set::Tiny
-  apt:
-    name: libset-tiny-perl
-    state: present
-
-- name: Install RT developer-mode dependency Test::Pod
-  apt:
-    name: libtest-pod-perl
-    state: present
-
-- name: Install RT developer-mode dependency Test::Warn
-  apt:
-    name: libtest-warn-perl
-    state: present
-
-- name: Install RT developer-mode dependency Test::MockTime
-  apt:
-    name: libtest-mocktime-perl
-    state: present
-    
-- name: Install RT developer-mode dependency Test::WWW::Mechanize
-  apt:
-    name: libtest-www-mechanize-perl
-    state: present
-
-- name: Install RT developer-mode dependency Test::WWW::Mechanize::PSGI
-  apt:
-    name: libtest-www-mechanize-psgi-perl
-    state: present
-
-- name: Install RT developer-mode dependency Test::NoWarnings
-  apt:
-    name: libtest-nowarnings-perl
-    state: present
-    
-- name: Install RT developer-mode dependency Plack::Middleware::Test::StashWarnings
-  apt:
-    name: libplack-middleware-test-stashwarnings-perl
-    state: present
-
-# GRAPHVIZ dependencies
-- name: Install RT GraphViz dependency GraphViz
-  apt:
-    name: libgraphviz-perl
-    state: present
-
-# GD dependencies
-- name: Install RT GD dependency GD
-  apt:
-    name: libgd-perl
-    state: present
-
-- name: Install RT GD dependency GD::Text
-  apt:
-    name: libgd-text-perl
-    state: present
-
-- name: Install RT GD dependency GD::Graph
-  apt:
-    name: libgd-graph-perl
-    state: present
-
-
-
-
-
+  with_items:
+    - autoconf
+    - perl-doc
+    - libterm-readkey-perl
+    - libfile-sharedir-perl
+    - libdevel-globaldestruction-perl
+    - libplack-perl
+    - libdata-guid-perl
+    - libdatetime-format-natural-perl
+    - libnet-cidr-perl
+    - libdevel-stacktrace-perl
+    - libapache-session-perl
+    - libtext-wikiformat-perl
+    - libhtml-mason-perl
+    - libcgi-emulate-psgi-perl
+    - libipc-run-perl
+    - libipc-run3-perl
+    - libcrypt-eksblowfish-perl
+    - libmodule-versions-report-perl
+    - libhtml-quoted-perl
+    - libhtml-formattext-withlinks-andtables-perl
+    - libtext-password-pronounceable-perl
+    - liblocale-maketext-lexicon-perl
+    - libtext-template-perl
+    - libhtml-rewriteattributes-perl
+    - libtext-wrapper-perl
+    - liblocale-maketext-fuzzy-perl
+    - libhtml-mason-psgihandler-perl
+    - libemail-address-perl
+    - libxml-rss-perl
+    - libhtml-scrubber-perl
+    - libdatetime-locale-perl
+    - libcgi-psgi-perl
+    - liblist-moreutils-perl
+    - libdbix-searchbuilder-perl
+    - libcss-squish-perl
+    - libdatetime-perl
+    - libjson-perl
+    - libhttp-message-perl
+    - liblog-dispatch-perl
+    - libuniversal-require-perl
+    - liblocale-maketext-gettext-perl
+    - libregexp-ipv6-perl
+    - libregexp-common-net-cidr-perl
+    - libtree-simple-perl
+    - libdate-manip-perl
+    - libstring-shellquote-perl
+    - libtime-parsedate-perl
+    - libencode-perl
+    - libsymbol-global-name-perl
+    - librole-basic-perl
+    - libemail-address-list-perl
+    - libdate-extract-perl
+    - libtext-quoted-perl
+    - libmime-tools-perl
+    - libfcgi-procmanager-perl
+    - libfile-which-perl
+    - libgnupg-interface-perl
+    - libperlio-eol-perl
+    - libdata-ical-perl
+    - libnet-ssleay-perl
+    - libcrypt-ssleay-perl
+    - libcrypt-x509-perl
+    - libstring-shellquote-perl
+    - libconvert-color-perl
+    - libmojolicious-perl
+    - libemail-abstract-perl
+    - libtest-longstring-perl
+    - liblog-dispatch-perl-perl
+    - libtest-deep-perl
+    - libwww-mechanize-perl
+    - libtest-email-perl
+    - liblocale-po-perl
+    - libtest-expect-perl
+    - libxml-simple-perl
+    - libset-tiny-perl
+    - libtest-pod-perl
+    - libtest-warn-perl
+    - libtest-mocktime-perl
+    - libtest-www-mechanize-perl
+    - libtest-www-mechanize-psgi-perl
+    - libtest-nowarnings-perl
+    - libplack-middleware-test-stashwarnings-perl
+    - libgraphviz-perl
+    - libgd-perl
+    - libgd-text-perl
+    - libgd-graph-perl
