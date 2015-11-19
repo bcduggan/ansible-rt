@@ -25,17 +25,13 @@
   command: make
   args:
     chdir: /tmp/{{ ext.name }}-{{ ext.version }}
-    #creates: /tmp/{{ ext.name }}-{{ ext.version }}/blib/lib/RT/Extension/ResetPassword.pm
+    creates: /tmp/{{ ext.name }}-{{ ext.version }}/blib
   
 - name: Install RT extension
   command: make install
   args:
     chdir: /tmp/{{ ext.name }}-{{ ext.version }}
-
-- name: Initialize RT extension database
-  shell: echo {{ mariadb_root_password }} | make initdb
-  args:
-    chdir: /tmp/{{ ext.name }}-{{ ext.version }}
+    creates: /opt/rt4/local/plugins/{{ ext.name }}
 
 - name: Enable RT extension in RT_SiteConfig.pm
   lineinfile:
@@ -44,3 +40,33 @@
     state: present
     insertbefore: 1;
   notify: Clear Mason cache
+  register: RT_SiteConfig
+
+## Task: Initialized RT extension database
+##
+## Some RT extensions require 'make initialize-database'. Rather than adding
+## tables to the rt4 database, like RT does, this action usually calls
+## rt-setup-database with some initialdata file.
+##
+## The documentation for extensions that have this step explicitly say
+## to only run this command once, or it will create duplicate data. This means
+## there's probably no good way of testing whether the initialdata is already
+## present.
+##
+## For example, RT::Extension::ResetPassword adds Templates to RT. The Perl
+## structure in the initialdata file can't contain a unique ID. The best a Template
+## has is a 'name' value. Since a user might change the name through the RT
+## web interface later, there's no way to tell for sure whether the user
+## ever ran 'make initialize-database'.
+##
+## The best we have to go on is whether the extension modules are installed under
+## /opt/rt4, and whether RT_SiteConfig.pm contains the extension's config line.
+##
+## For now, this role determines whether to run this task based on whether
+## RT_SiteConfig.pm already had the extension's config line.
+- name: Initialize RT extension database
+  shell: echo {{ mariadb_root_password }} | make initialize-database
+  args:
+    chdir: /tmp/{{ ext.name }}-{{ ext.version }}
+  when: RT_SiteConfig|changed
+
