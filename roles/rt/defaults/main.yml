@@ -1,0 +1,15 @@
+---
+extensions:
+  ResetPassword: 
+    name: RT-Extension-ResetPassword
+    perl_pkg: RT::Extension::ResetPassword
+    url_base: https://cpan.metacpan.org/authors/id/A/AL/ALEXMV
+    version: 1.03
+    checksum: a2bd6c9b298ce24d6c43edafe98ec0cbe7d4cfb4d73fbc6fd3fac37e4cefcd03
+
+  JSGantt:
+    name: RT-Extension-JSGantt
+    perl_pkg: RT::Extension::JSGantt
+    url_base: https://cpan.metacpan.org/authors/id/A/AL/ALEXMV/
+    version: 1.03
+    checksum: 2150d78b018f0011d67957ddc2de3278d14553bf2b29e9a91d5e4fbb432ab872
