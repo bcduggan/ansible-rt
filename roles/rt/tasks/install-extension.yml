@@ -1,0 +1,46 @@
+---
+
+- name: Download {{ ext.perl_pkg }}
+  get_url:
+    url: "{{ ext.url_base }}/{{ ext.name }}-{{ ext.version }}.tar.gz"
+    dest: /tmp/{{ ext.name }}-{{ ext.version }}.tar.gz
+    validate_certs: yes
+    sha256sum: "{{ ext.checksum }}"
+    force: no
+
+- name: Untar and ungzip {{ ext.perl_pkg }}
+  unarchive:
+    copy: no
+    src: /tmp/{{ ext.name }}-{{ ext.version }}.tar.gz
+    dest: /tmp
+    creates: /tmp/{ name }}-{{ ext.version }}
+
+- name: Make {{ ext.perl_pkg }} Makefile
+  command: perl Makefile.PL
+  args:
+    chdir: /tmp/{{ ext.name }}-{{ ext.version }}
+    creates: /tmp/{{ ext.name }}-{{ ext.version }}/Makefile
+
+- name: Make {{ ext.perl_pkg }}
+  command: make
+  args:
+    chdir: /tmp/{{ ext.name }}-{{ ext.version }}
+    #creates: /tmp/{{ ext.name }}-{{ ext.version }}/blib/lib/RT/Extension/ResetPassword.pm
+  
+- name: Install {{ ext.perl_pkg }}
+  command: make install
+  args:
+    chdir: /tmp/{{ ext.name }}-{{ ext.version }}
+
+- name: Initialize {{ ext.perl_pkg }} database
+  shell: echo {{ mariadb_root_password }} | make initdb
+  args:
+    chdir: /tmp/{{ ext.name }}-{{ ext.version }}
+
+- name: Enable {{ ext.perl_pkg }} in RT_SiteConfig.pm
+  lineinfile:
+    dest: /opt/rt4/etc/RT_SiteConfig.pm
+    line: Plugin('{{ ext.perl_pkg }}');
+    state: present
+    insertbefore: 1;
+  notify: Clear Mason cache
