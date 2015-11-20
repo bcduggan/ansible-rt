@@ -65,6 +65,6 @@
     src: /etc/apache2/sites-available/001-rt.conf
   notify: Restart Apache
 
-- include: install_extension.yml
+- include: install_rt_ext.yml
   vars:
     ext: "{{ extensions.ResetPassword }}"
