@@ -1,6 +1,6 @@
 ---
 
-- include: perl-dependencies.yml
+- include: install_perl_deps.yml
 
 - name: Create CPAN config directory
   file:
@@ -65,6 +65,6 @@
     src: /etc/apache2/sites-available/001-rt.conf
   notify: Restart Apache
 
-- include: install-extension.yml
+- include: install_extension.yml
   vars:
     ext: "{{ extensions.ResetPassword }}"
