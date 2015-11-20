@@ -39,8 +39,8 @@
     line: Plugin('{{ ext.perl_pkg }}');
     state: present
     insertbefore: 1;
-  notify: Clear Mason cache
   register: RT_SiteConfig
+  notify: Clear Mason cache
 
 ## Task: Initialized RT extension database
 ##
@@ -69,4 +69,4 @@
   args:
     chdir: /tmp/{{ ext.name }}-{{ ext.version }}
   when: RT_SiteConfig|changed
-
+  notify: Clear Mason cache
