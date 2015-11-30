@@ -3,6 +3,3 @@
 \#*\#
 *.elc
 .\#*
-
-.vagrant
-roles/deimosfr.mariadb
