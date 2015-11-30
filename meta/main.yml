@@ -13,5 +13,6 @@ galaxy_info:
   - monitoring
   - system
   - web
+  - ticketing
 dependencies:
   - { role: deimosfr.mariadb }
