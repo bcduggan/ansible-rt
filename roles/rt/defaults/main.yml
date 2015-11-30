@@ -1,4 +1,19 @@
 ---
+
+rt_version: rt-4.2.8
+
+rt:
+  rt-4.2.12:
+    checksum: e21220c609706dc9977a13309d78a4d9171455ae823cf549311342cedd837264
+  rt-4.2.11:
+    checksum: dc07f32dd04a50bd9d0ff86a1f9fe3cd1a128f01cbbd018e5fa23a41ddfb87e6
+  rt-4.2.10:
+    checksum: 86258ac7771465be0beae1d8d14d05610c5a938cede418143b8fd7203ccd3eb6
+  rt-4.2.9:
+    checksum: 1cbfe4f824637de45cc093ab87260ef9bbac11ba724b93c01f39a6d4e9592613
+  rt-4.2.8:
+    checksum: 25009913d2d495ff91f21a47a61ebec1a246a2c89422e22700810a7ef51ede4c
+
 extensions:
   ResetPassword: 
     name: RT-Extension-ResetPassword
