@@ -54,7 +54,7 @@
 
 - name: Install RT_SiteConfig.pm
   copy:
-    src: roles/rt/files/RT_SiteConfig.pm
+    src: RT_SiteConfig.pm
     dest: /opt/rt4/etc/RT_SiteConfig.pm
     owner: root
     group: www-data

@@ -13,7 +13,7 @@
   
 - name: Configure CPAN
   copy:
-    src: roles/rt/files/MyConfig.pm
+    src: MyConfig.pm
     dest: /root/.cpan/CPAN/MyConfig.pm
     owner: root
     group: root
@@ -47,7 +47,7 @@
 
 - name: Configure Apache RT site
   copy:
-    src: roles/rt/files/001-rt.conf
+    src: 001-rt.conf
     dest: /etc/apache2/sites-available/001-rt.conf
     owner: root
     group: root
