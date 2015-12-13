@@ -10,9 +10,5 @@ galaxy_info:
       - jessie
   categories:
   - development
-  - monitoring
-  - system
   - web
   - ticketing
-dependencies:
-  - { role: deimosfr.mariadb }

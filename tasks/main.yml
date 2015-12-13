@@ -35,7 +35,9 @@
     line: "  FcgidMaxRequestLen 1073741824"
     insertafter: "  FcgidConnectTimeout 20"
     state: present
-    
+
+- include: mysql.yml
+
 - name: Test rt4 database presence
   shell: /usr/bin/mysql --user=root --password={{ mariadb_root_password }} --batch --execute='show databases;' | grep --quiet rt4
   register: db_test
