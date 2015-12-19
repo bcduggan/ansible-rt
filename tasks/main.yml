@@ -38,6 +38,11 @@
 
 - include: mysql.yml
 
+- name: Install build-essential
+  apt:
+    name: build-essential
+    state: present
+  
 - name: Test rt4 database presence
   shell: /usr/bin/mysql --user=root --password={{ mysql_root_password }} --batch --execute='show databases;' | grep --quiet rt4
   register: db_test

@@ -65,7 +65,7 @@
 ## For now, this role determines whether to run this task based on whether
 ## RT_SiteConfig.pm already had the extension's config line.
 - name: Initialize RT extension database
-  shell: echo {{ mariadb_root_password }} | make initialize-database
+  shell: echo {{ mysql_root_password }} | make initialize-database
   args:
     chdir: /tmp/{{ ext.name }}-{{ ext.version }}
   when: RT_SiteConfig|changed

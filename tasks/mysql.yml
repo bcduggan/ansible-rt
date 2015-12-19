@@ -1,22 +1,21 @@
 ---
+## mysql_root_password must not contain special chars
+## TODO: fix that.
 - name: Install MariaDB server
-  apt:
-    name: mariadb-server
-    state: present
+  shell: |
+    export DEBIAN_FRONTEND="noninteractive"
+    debconf-set-selections <<< "mariadb-server mysql-server/root_password password {{ mysql_root_password }}"
+    debconf-set-selections <<< "mariadb-server mysql-server/root_password_again password {{ mysql_root_password }}"
+    aptitude install -y mariadb-server
+  args:
+      executable: /bin/bash
 
-- name: Install MariaDB client
-  apt:
-    name: mariadb-client
-    state: present
+## Following tasks taken from mysql_secure_installation
+- name: Delete anonymous MariaDB users
+  command: mysql --user=root --password={{ mysql_root_password }} -e "DELETE FROM mysql.user WHERE User='';"
 
-- name: Install PythonMySQLDB
-  apt:
-    name: python-mysqldb
-    state: present
+- name: Disallow remote root MariaDB login
+  command: mysql --user=root --password={{ mysql_root_password }} -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
 
-- name: Set MySQL root password
-  mysql_user:
-    login_user: root
-    login_password: ""
-    name: root
-    password: "{{ mysql_root_password }}"
+- name: Reload privilege table
+  command: mysql --user=root --password={{ mysql_root_password }} -e "FLUSH PRIVILEGES;"

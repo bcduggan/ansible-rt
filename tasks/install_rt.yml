@@ -1,5 +1,4 @@
 ---
-
 - name: Download RT
   get_url:
     url: https://download.bestpractical.com/pub/rt/release/{{ rt_version }}.tar.gz
