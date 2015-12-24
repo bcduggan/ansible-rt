@@ -1,0 +1,6 @@
+---
+- name: Install Mojolicious 5.71
+  command: cpan JHTHORSEN/Mojolicious-5.71
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+    PERLBREW_ROOT: /opt/perl5

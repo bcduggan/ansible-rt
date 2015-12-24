@@ -1,0 +1,13 @@
+---
+- name: Install CentOS development RPMs
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ devel_rpm_deps }}"
+
+- name: Install RPM deps for RT
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ rt_rpm_deps }}"
+  

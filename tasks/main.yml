@@ -1,77 +1,76 @@
 ---
 
-- include: install_perl_deps.yml
+#- include: facts.yml
 
-- name: Create CPAN config directory
-  file:
-    path: /root/.cpan/CPAN
-    state: directory
-    recurse: no
-    owner: root
-    group: root
-    mode: 0755
-  
+- include: centos/rt_rpm_deps.yml
+  when: ansible_distribution == 'CentOS'
+
+- include: debian/main.yml
+  when: ansible_distribution == 'Debian'
+
 - name: Configure CPAN
-  copy:
-    src: MyConfig.pm
-    dest: /root/.cpan/CPAN/MyConfig.pm
-    owner: root
-    group: root
-    mode: 0644
+  include: cpan.yml
 
-- name: Install Apache
-  apt:
-    name: apache2
-    state: present
-
-- name: Install FastCGI module for Apache
-  apt:
-    name: libapache2-mod-fcgid
-    state: present
-
-- name: Configure mod_fcgid
-  lineinfile:
-    dest: /etc/apache2/mods-available/fcgid.conf
-    line: "  FcgidMaxRequestLen 1073741824"
-    insertafter: "  FcgidConnectTimeout 20"
-    state: present
-
-- include: mysql.yml
-
-- name: Install build-essential
-  apt:
-    name: build-essential
-    state: present
+- name: Install Perl 5.10.1 on CentOS 7
+  include: centos/perl_5.10.1.yml
+  when: ansible_distribution == 'CentOS'
   
-- name: Test rt4 database presence
-  shell: /usr/bin/mysql --user=root --password={{ mysql_root_password }} --batch --execute='show databases;' | grep --quiet rt4
-  register: db_test
-  failed_when: False
-  changed_when: False
-  
-- include: install_rt.yml
-  when: db_test|failed
+#- name: Install Apache
+#  apt:
+#    name: apache2
+#    state: present
+#
+#- name: Install FastCGI module for Apache
+#  apt:
+#    name: libapache2-mod-fcgid
+#    state: present
+#
+#- name: Configure mod_fcgid
+#  lineinfile:
+#    dest: /etc/apache2/mods-available/fcgid.conf
+#    line: "  FcgidMaxRequestLen 1073741824"
+#    insertafter: "  FcgidConnectTimeout 20"
+#    state: present
+#
+#- include: mysql.yml
+#
+#- name: Install build-essential
+#  apt:
+#    name: build-essential
+#    state: present
 
-- name: Configure Apache RT site
-  copy:
-    src: 001-rt.conf
-    dest: /etc/apache2/sites-available/001-rt.conf
-    owner: root
-    group: root
-    mode: 0644
+#- include: centos/perl_5.10.1_rt_deps.yml
+#  when: ansible_distribution == 'CentOS'
 
-- name: Disable default Apache site
-  file:
-    path: /etc/apache2/sites-enabled/000-default.conf
-    state: absent
+#- name: Test rt4 database presence
+#  shell: /usr/bin/mysql --user=root --password={{ mysql_root_password }} --batch --execute='show databases;' | grep --quiet rt4
+#  register: db_test
+#  failed_when: False
+#  changed_when: False
+#  
+#- include: install_rt.yml
+#  when: db_test|failed
 
-- name: Enable Apache RT site
-  file:
-    path: /etc/apache2/sites-enabled/001-rt.conf
-    state: link
-    src: /etc/apache2/sites-available/001-rt.conf
-  notify: Restart Apache
-
-- include: install_rt_ext.yml
-  vars:
-    ext: "{{ extensions.ResetPassword }}"
+#- name: Configure Apache RT site
+#  copy:
+#    src: 001-rt.conf
+#    dest: /etc/apache2/sites-available/001-rt.conf
+#    owner: root
+#    group: root
+#    mode: 0644
+#
+#- name: Disable default Apache site
+#  file:
+#    path: /etc/apache2/sites-enabled/000-default.conf
+#    state: absent
+#
+#- name: Enable Apache RT site
+#  file:
+#    path: /etc/apache2/sites-enabled/001-rt.conf
+#    state: link
+#    src: /etc/apache2/sites-available/001-rt.conf
+#  notify: Restart Apache
+#
+#- include: install_rt_ext.yml
+#  vars:
+#    ext: "{{ extensions.ResetPassword }}"

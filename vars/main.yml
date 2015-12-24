@@ -1,2 +1,48 @@
 ---
-# vars file for ./
+#  - "@Development Tools"
+devel_rpm_deps:
+  - autoconf
+  - automake
+  - binutils
+  - bison
+  - flex
+  - gcc
+  - gcc-c++
+  - gettext
+  - libtool
+  - make
+  - patch
+  - pkgconfig
+  - redhat-rpm-config
+  - rpm-build
+  - rpm-sign
+  - byacc
+  - diffstat
+  - elfutils
+  - gcc-gfortran
+  - git
+  - indent
+  - intltool
+  - patchutils
+  - rcs
+  - systemtap
+
+rt_rpm_deps:
+  - openssl-devel
+  - graphviz-devel
+  - libxml2-devel
+  - expat-devel
+  - gd-devel
+  - mariadb-devel
+  - perl-CPAN
+  - perl-App-cpanminus
+
+perlbrew_rpm_deps:
+  - perl-Capture-Tiny
+  - perl-Test-Simple
+  - perl-Test-Output
+  - perl-Test-NoWarnings
+  - perl-Test-Exception
+  - perl-local-lib
+  - perl-File-Temp
+
