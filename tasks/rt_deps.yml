@@ -1,0 +1,13 @@
+---
+- include: centos/rt_rpm_deps.yml
+  when: ansible_distribution == 'CentOS'
+
+- include: debian/rt_apt_deps.yml
+  when: ansible_distribution == 'Debian'
+
+- name: Configure CPAN
+  include: cpan.yml
+
+- name: Install Perl 5.10.1 on CentOS 7
+  include: centos/perl_5.10.1.yml
+  when: ansible_distribution == 'CentOS'

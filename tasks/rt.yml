@@ -2,7 +2,7 @@
 - name: Download RT
   get_url:
     url: https://download.bestpractical.com/pub/rt/release/{{ rt_version }}.tar.gz
-    dest: /tmp/{{ rt_version }}.tar.gz
+    dest: /opt/src/{{ rt_version }}.tar.gz
     validate_certs: yes
     sha256sum: "{{ rt[rt_version].checksum }}"
     force: no
@@ -10,9 +10,9 @@
 - name: Untar and ungzip RT
   unarchive:
     copy: no
-    src: /tmp/{{ rt_version }}.tar.gz
-    dest: /tmp
-    creates: /tmp/{{ rt_version }}
+    src: /opt/src/{{ rt_version }}.tar.gz
+    dest: /opt/src
+    creates: /opt/src/{{ rt_version }}
 
 - name: Configure RT
   shell: >
@@ -23,28 +23,41 @@
     --enable-gpg
     --enable-smime
   args:
-    chdir: /tmp/{{ rt_version }}
+    chdir: /opt/src/{{ rt_version }}
     ## Creates this file, among many others. Should all be listed?
-    creates: /tmp/{{ rt_version }}/etc/RT_config.pm
+    creates: /opt/src/{{ rt_version }}/etc/RT_config.pm
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+    PERLBREW_ROOT: /opt/perl5
 
 - name: Test RT dependencies
   command: make testdeps
   args:
-    chdir: /tmp/{{ rt_version }}
+    chdir: /opt/src/{{ rt_version }}
   register: testdeps
   failed_when: False
   changed_when: False
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+    PERLBREW_ROOT: /opt/perl5
+
     
 - name: Fix RT dependencies
   command: make fixdeps
   args:
-    chdir: /tmp/{{ rt_version }}
+    chdir: /opt/src/{{ rt_version }}
   when: testdeps|failed
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+    PERLBREW_ROOT: /opt/perl5
 
 - name: Install RT
   command: make install
   args:
     chdir: /tmp/{{ rt_version }}
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+    PERLBREW_ROOT: /opt/perl5
 
 - name: Initialize RT database
   shell: echo {{ mysql_root_password }} | make initialize-database
