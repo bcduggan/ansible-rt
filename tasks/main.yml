@@ -1,7 +1,9 @@
 ---
 
+- include: yum_config.yml
+  when: ansible_distribution == 'CentOS'
 - include: rt_deps.yml
-- include: rt.yml
+#- include: rt.yml
   
 #- name: Install Apache
 #  apt:

@@ -9,3 +9,9 @@
     path: /opt/rt4/var/mason_data/obj
     state: absent
   notify: Restart Apache
+
+- name: Sync yum cache
+  synchronize:
+    mode: pull
+    src: /var/cache/yum
+    dest: /home/bcduggan/ansible/vagrant/rt/
