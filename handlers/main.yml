@@ -15,3 +15,16 @@
     mode: pull
     src: /var/cache/yum
     dest: /home/bcduggan/ansible/vagrant/rt/
+
+- name: Sync cpanm
+  synchronize:
+    mode: pull
+    src: /home/vagrant/.cpanm/
+    dest: /home/bcduggan/ansible/vagrant/rt/cpanm
+
+#- name: Sync cpan
+#  synchronize:
+#    mode: pull
+#    rsync_opts: --exclude='CPAN/MyConfig.pm'
+#    src: /root/.cpan/
+#    dest: /home/bcduggan/ansible/vagrant/rt/cpan

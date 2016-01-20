@@ -2,51 +2,56 @@
 - name: Install CPAN deps for perlbrew
   yum:
     name: "{{ item }}"
-    state: present
+    state: latest
   with_items: "{{ perlbrew_rpm_deps }}"
+  notify: Sync yum cache
 
-## Missed Pod::Usage dependency
-## perlbrew will fail to install Pod::Usage >= 1.64
+# Missed Pod::Usage dependency
+# perlbrew will fail to install Pod::Usage >= 1.64
 - name: Manually install Pod::Usage prereq
   cpanm:
     name: "Pod::Find"
+    system_lib: yes
+  notify: Sync cpanm
   
 - name: Install perlbrew
   cpanm:
     name: "App::perlbrew"
+    system_lib: yes
+  notify: Sync cpanm
 
-## TODO: Verify local perlbrew cache containing perl 5.10.1 and CPAN deps for RT
-## TODO: Install cache under perlbrew_root to PERLBREW_ROOT on host
-#- name: Sync cached perl 5.10.1 packages to RT host
-#  local_action: stat path=roles/bcduggan.rt/files/centos/MANIFEST_perlbrew_root
-#  sudo: no
-#  register: cache_presence
-#
-#- debug:
-#    var: cache_presence
-#  
-#- name: Sync cached perl 5.10.1 and CPAN deps for RT to host
-#  synchronize:
-#    src: ../../files/centos/perlbrew_root/
-#    dest: /opt/perl5
-#    owner: no
-#    group: no
-#    checksum: yes
-#    rsync_path: "sudo rsync"
-#  register: perl_sync_result
-#  ignore_errors: True
+### TODO: Verify local perlbrew cache containing perl 5.10.1 and CPAN deps for RT
+### TODO: Install cache under perlbrew_root to PERLBREW_ROOT on host
+##- name: Sync cached perl 5.10.1 packages to RT host
+##  local_action: stat path=roles/bcduggan.rt/files/centos/MANIFEST_perlbrew_root
+##  sudo: no
+##  register: cache_presence
+##
+##- debug:
+##    var: cache_presence
+##  
+##- name: Sync cached perl 5.10.1 and CPAN deps for RT to host
+##  synchronize:
+##    src: ../../files/centos/perlbrew_root/
+##    dest: /opt/perl5
+##    owner: no
+##    group: no
+##    checksum: yes
+##    rsync_path: "sudo rsync"
+##  register: perl_sync_result
+##  ignore_errors: True
+##    
+##- debug:
+##    var: perl_sync_result
 #    
-#- debug:
-#    var: perl_sync_result
-    
-- name: Init perlbrew
-  command: perlbrew init
-  environment:
-    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
-    PERLBREW_ROOT: /opt/perl5
-
-- name: Install perl 5.10.1
-  command: perlbrew install 5.10.1
-  environment:
-    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
-    PERLBREW_ROOT: /opt/perl5
+#- name: Init perlbrew
+#  command: perlbrew init
+#  environment:
+#    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+#    PERLBREW_ROOT: /opt/perl5
+#
+#- name: Install perl 5.10.1
+#  command: perlbrew install 5.10.1
+#  environment:
+#    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+#    PERLBREW_ROOT: /opt/perl5
