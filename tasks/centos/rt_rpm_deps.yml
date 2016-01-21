@@ -1,9 +1,14 @@
 ---
+#- name: Install CentOS development RPMs
+#  yum:
+#    name: "{{ item }}"
+#    state: installed
+#  with_items: "{{ devel_rpm_deps }}"
+#  notify: Sync yum cache
 - name: Install CentOS development RPMs
   yum:
-    name: "{{ item }}"
+    name: "@Development tools"
     state: installed
-  with_items: "{{ devel_rpm_deps }}"
   notify: Sync yum cache
 
 - name: Install RPM deps for RT

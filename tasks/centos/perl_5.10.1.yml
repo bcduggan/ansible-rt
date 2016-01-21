@@ -8,13 +8,15 @@
 
 # Missed Pod::Usage dependency
 # perlbrew will fail to install Pod::Usage >= 1.64
-- name: Manually install Pod::Usage prereq
+- name: Manually install Pod::Find prereq
+  become: no
   cpanm:
     name: "Pod::Find"
     system_lib: yes
   notify: Sync cpanm
-  
+
 - name: Install perlbrew
+  become: no
   cpanm:
     name: "App::perlbrew"
     system_lib: yes

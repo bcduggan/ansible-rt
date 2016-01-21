@@ -10,18 +10,52 @@
     state: absent
   notify: Restart Apache
 
+# HEADSUP for rsync commands: Vagrant hosts typically have
+# StrictHostKeyChecking=no somewhere in the vagrant->ansible->rsync->ssh chain.
+# If this command results in error due to a nonexistant file, rsync's error output
+# will spend most of its characters complaining that the remote host key has
+# changed on 'vagrant up'. But the real error is still a nonexistant file.
+  
+# synchronize in pull mode is broken in Ansible 2?
 - name: Sync yum cache
-  synchronize:
-    mode: pull
-    src: /var/cache/yum
-    dest: /home/bcduggan/ansible/vagrant/rt/
+  become: no
+  command: >
+    /usr/bin/rsync -az
+    -e "ssh -p {{ ansible_ssh_port }}
+    -i {{ ansible_ssh_private_key_file }}
+    -l {{ ansible_ssh_user }}
+    -o StrictHostKeyChecking=no"
+    {{ ansible_ssh_user }}@{{ ansible_ssh_host }}:/var/cache/yum/
+    {{ lookup('env','HOME') }}/ansible/vagrant/rt/yum
+  delegate_to: localhost
 
+# synchronize in pull mode is broken in Ansible 2?
 - name: Sync cpanm
-  synchronize:
-    mode: pull
-    src: /home/vagrant/.cpanm/
-    dest: /home/bcduggan/ansible/vagrant/rt/cpanm
+  become: no
+  command: >
+    /usr/bin/rsync -az
+    -e "ssh -p {{ ansible_ssh_port }}
+    -i {{ ansible_ssh_private_key_file }}
+    -l {{ ansible_ssh_user }}
+    -o StrictHostKeyChecking=no"
+    {{ ansible_ssh_user }}@{{ ansible_ssh_host }}:/home/vagrant/.cpanm/
+    {{ lookup('env','HOME') }}/ansible/vagrant/rt/cpanm
+  delegate_to: localhost
+  notify: Sync cpanm packages
 
+# synchronize in pull mode is broken in Ansible 2?
+- name: Sync cpanm packages
+  become: no
+  command: >
+    /usr/bin/rsync -az
+    -e "ssh -p {{ ansible_ssh_port }}
+    -i {{ ansible_ssh_private_key_file }}
+    -l {{ ansible_ssh_user }}
+    -o StrictHostKeyChecking=no"
+    {{ ansible_ssh_user }}@{{ ansible_ssh_host }}:/usr/local/
+    {{ lookup('env','HOME') }}/ansible/vagrant/rt/local
+  delegate_to: localhost
+  
 #- name: Sync cpan
 #  synchronize:
 #    mode: pull
