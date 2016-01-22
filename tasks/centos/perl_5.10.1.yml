@@ -8,7 +8,8 @@
 
 # Missed Pod::Usage dependency
 # perlbrew will fail to install Pod::Usage >= 1.64
-- name: Manually install Pod::Find prereq
+# Installing Pod::Find installs correct Pod::Usage version
+- name: Install Pod::Find
   become: no
   cpanm:
     name: "Pod::Find"
@@ -21,6 +22,29 @@
     name: "App::perlbrew"
     system_lib: yes
   notify: Sync cpanm
+
+- name: Init perlbrew
+  command: perlbrew init
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+    PERLBREW_ROOT: /opt/perl5
+  changed_when: False
+
+- name: List perl installations
+  command: perlbrew list
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+    PERLBREW_ROOT: /opt/perl5
+  register: perlbrew_list_result
+  changed_when: False
+
+- name: Install perl 5.10.1
+  command: perlbrew install 5.10.1
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+    PERLBREW_ROOT: /opt/perl5
+  notify: Sync /opt/perl5
+  when: "'perl-5.10.1' not in perlbrew_list_result.stdout"
 
 ### TODO: Verify local perlbrew cache containing perl 5.10.1 and CPAN deps for RT
 ### TODO: Install cache under perlbrew_root to PERLBREW_ROOT on host
@@ -46,14 +70,4 @@
 ##- debug:
 ##    var: perl_sync_result
 #    
-#- name: Init perlbrew
-#  command: perlbrew init
-#  environment:
-#    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
-#    PERLBREW_ROOT: /opt/perl5
-#
-#- name: Install perl 5.10.1
-#  command: perlbrew install 5.10.1
-#  environment:
-#    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
-#    PERLBREW_ROOT: /opt/perl5
+

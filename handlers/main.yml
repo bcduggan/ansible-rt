@@ -41,10 +41,10 @@
     {{ ansible_ssh_user }}@{{ ansible_ssh_host }}:/home/vagrant/.cpanm/
     {{ lookup('env','HOME') }}/ansible/vagrant/rt/cpanm
   delegate_to: localhost
-  notify: Sync cpanm packages
+  notify: Sync /usr/local
 
 # synchronize in pull mode is broken in Ansible 2?
-- name: Sync cpanm packages
+- name: Sync /usr/local
   become: no
   command: >
     /usr/bin/rsync -az
@@ -54,6 +54,19 @@
     -o StrictHostKeyChecking=no"
     {{ ansible_ssh_user }}@{{ ansible_ssh_host }}:/usr/local/
     {{ lookup('env','HOME') }}/ansible/vagrant/rt/local
+  delegate_to: localhost
+
+# synchronize in pull mode is broken in Ansible 2?
+- name: Sync /opt/perl5
+  become: no
+  command: >
+    /usr/bin/rsync -az
+    -e "ssh -p {{ ansible_ssh_port }}
+    -i {{ ansible_ssh_private_key_file }}
+    -l {{ ansible_ssh_user }}
+    -o StrictHostKeyChecking=no"
+    {{ ansible_ssh_user }}@{{ ansible_ssh_host }}:/opt/perl5/
+    {{ lookup('env','HOME') }}/ansible/vagrant/rt/perl5
   delegate_to: localhost
   
 #- name: Sync cpan

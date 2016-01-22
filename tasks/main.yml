@@ -2,6 +2,13 @@
 
 - include: yum_config.yml
   when: ansible_distribution == 'CentOS'
+
+- name: Install CentOS development RPMs
+  yum:
+    name: "@Development tools"
+    state: installed
+  notify: Sync yum cache
+  
 - include: rt_deps.yml
 #- include: rt.yml
   
