@@ -23,26 +23,29 @@
     system_lib: yes
   notify: Sync cpanm
 
+- name: Set PERLBREW_ROOT
+  lineinfile:
+    dest: /etc/environment
+    line: PERLBREW_ROOT=/opt/perl5
+    state: present
+
 - name: Init perlbrew
-  command: perlbrew init
-  environment:
-    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
-    PERLBREW_ROOT: /opt/perl5
+  command: /usr/local/bin/perlbrew init
   changed_when: False
 
+- name: Install perlbrew cpanm
+  command: /usr/local/bin/perlbrew install-cpanm
+  args:
+    creates: /opt/perl5/bin/cpanm
+  notify: Sync /opt/perl5
+
 - name: List perl installations
-  command: perlbrew list
-  environment:
-    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
-    PERLBREW_ROOT: /opt/perl5
+  command: /usr/local/bin/perlbrew list
   register: perlbrew_list_result
   changed_when: False
 
 - name: Install perl 5.10.1
-  command: perlbrew install 5.10.1
-  environment:
-    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
-    PERLBREW_ROOT: /opt/perl5
+  command: /usr/local/bin/perlbrew install 5.10.1
   notify: Sync /opt/perl5
   when: "'perl-5.10.1' not in perlbrew_list_result.stdout"
 

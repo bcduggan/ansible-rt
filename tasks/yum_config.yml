@@ -1,6 +1,0 @@
----
-- name: keepcache=1
-  lineinfile:
-    dest: /etc/yum.conf
-    regexp: ^keepcache=0
-    line: keepcache=1

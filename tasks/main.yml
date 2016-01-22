@@ -1,19 +1,28 @@
 ---
 
-- include: yum_config.yml
-  when: ansible_distribution == 'CentOS'
-
-- name: Install CentOS development RPMs
+- name: no keepcache=0
+  lineinfile:
+    dest: /etc/yum.conf
+    line: keepcache=0
+    state: absent
+  
+- name: keepcache=1
+  lineinfile:
+    dest: /etc/yum.conf
+    line: keepcache=1
+    state: present
+  
+- name: Install CentOS Development tools
   yum:
     name: "@Development tools"
     state: installed
   notify: Sync yum cache
 
-- name: Install Perl 5.10.1 on CentOS 7
+- name: Install Perl 5.10.1
   include: perl_5.10.1.yml
   
-#- include: rt_deps.yml
-#- include: rt.yml
+- name: Install RT
+  include: rt.yml
   
 #- name: Install Apache
 #  apt:
