@@ -8,8 +8,11 @@
     name: "@Development tools"
     state: installed
   notify: Sync yum cache
+
+- name: Install Perl 5.10.1 on CentOS 7
+  include: perl_5.10.1.yml
   
-- include: rt_deps.yml
+#- include: rt_deps.yml
 #- include: rt.yml
   
 #- name: Install Apache

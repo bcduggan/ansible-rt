@@ -1,7 +1,0 @@
----
-- name: Install RPM deps for RT
-  yum:
-    name: "{{ item }}"
-    state: installed
-  with_items: "{{ rt_rpm_deps }}"
-  notify: Sync yum cache

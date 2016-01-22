@@ -1,4 +1,11 @@
 ---
+- name: Install RPM deps for RT
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items: "{{ rt_rpm_deps }}"
+  notify: Sync yum cache
+
 - name: Download RT
   get_url:
     url: https://download.bestpractical.com/pub/rt/release/{{ rt_version }}.tar.gz
