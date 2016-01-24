@@ -8,7 +8,7 @@
     group: root
     mode: 0755
   
-- name: Configure CPAN
+- name: Copy CPAN config file
   copy:
     src: MyConfig.pm
     dest: /root/.cpan/CPAN/MyConfig.pm

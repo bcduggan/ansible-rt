@@ -6,67 +6,87 @@
   with_items: "{{ rt_rpm_deps }}"
   notify: Sync yum cache
 
-- name: Install Mojolicious 5.17
-  become: no
+#- include: perlbrew_cpanm.yml
+
+- include_vars: rt_cpan_deps.yml
+
+# This merits a lot of explanation...      
+- name: Install RT deps from perlbrew cpanm
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+  shell: |
+    source ${PERLBREW_ROOT}/etc/bashrc
+    perlbrew use 5.10.1
+    cpanm {{ item.1 }}
+  notify: Sync /opt/perl5
+  register: perlbrew_cpanm_result
+  changed_when: >
+    perlbrew_cpanm_result|success and
+    perlbrew_cpanm_result.stdout_lines|length > 1
+  with_subelements:
+    - rt_cpan_deps
+    - packages
+
+- name: Create /opt/src
+  file:
+    path: /opt/src
+    state: directory
+    
+- name: Download RT
+  get_url:
+    url: https://download.bestpractical.com/pub/rt/release/{{ rt_version }}.tar.gz
+    dest: /opt/src/{{ rt_version }}.tar.gz
+    validate_certs: yes
+    sha256sum: "{{ rt[rt_version].checksum }}"
+    force: no
+
+- name: Untar and ungzip RT
+  unarchive:
+    copy: no
+    src: /opt/src/{{ rt_version }}.tar.gz
+    dest: /opt/src
+    creates: /opt/src/{{ rt_version }}
+    owner: root
+    group: root
+
+- name: Configure RT
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+  shell: |
+    source ${PERLBREW_ROOT}/etc/bashrc
+    perlbrew switch 5.10.1
+    ./configure \
+    --enable-developer \
+    --enable-graphviz \
+    --enable-gd \
+    --enable-gpg \
+    --enable-smime
+  args:
+    chdir: /opt/src/{{ rt_version }}
+    creates: /opt/src/{{ rt_version }}/etc/RT_config.pm
+
+## Shouldn't have to do this with all deps met by perlbrew_cpanm.yml
+#- name: Fix RT dependencies
+#  environment:
+#    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+#  shell: |
+#    source ${PERLBREW_ROOT}/etc/bashrc
+#    perlbrew switch 5.10.1
+#    make fixdeps
+#  args:
+#    chdir: /opt/src/{{ rt_version }}
+#  notify: Sync /opt/perl5
+
+- name: Test RT dependencies
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
     /usr/local/bin/perlbrew switch 5.10.1
-    cpanm --sudo JHTHORSEN/Mojolicious-5.17.tar.gz
+    make testdeps
   args:
-    creates: /opt/perl5/perls/perl-5.10.1/lib/site_perl/5.10.1/Mojolicious.pm
-  notify: Sync /opt/perl5
+    chdir: /opt/src/{{ rt_version }}
+  register: testdeps
+  changed_when: False
 
-#- name: Download RT
-#  get_url:
-#    url: https://download.bestpractical.com/pub/rt/release/{{ rt_version }}.tar.gz
-#    dest: /opt/src/{{ rt_version }}.tar.gz
-#    validate_certs: yes
-#    sha256sum: "{{ rt[rt_version].checksum }}"
-#    force: no
-#
-#- name: Untar and ungzip RT
-#  unarchive:
-#    copy: no
-#    src: /opt/src/{{ rt_version }}.tar.gz
-#    dest: /opt/src
-#    creates: /opt/src/{{ rt_version }}
-#
-#- name: Configure RT
-#  shell: >
-#    ./configure
-#    --enable-developer
-#    --enable-graphviz
-#    --enable-gd
-#    --enable-gpg
-#    --enable-smime
-#  args:
-#    chdir: /opt/src/{{ rt_version }}
-#    ## Creates this file, among many others. Should all be listed?
-#    creates: /opt/src/{{ rt_version }}/etc/RT_config.pm
-#  environment:
-#    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
-#    PERLBREW_ROOT: /opt/perl5
-#
-#- name: Test RT dependencies
-#  command: make testdeps
-#  args:
-#    chdir: /opt/src/{{ rt_version }}
-#  register: testdeps
-#  failed_when: False
-#  changed_when: False
-#  environment:
-#    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
-#    PERLBREW_ROOT: /opt/perl5
-#    
-#- name: Fix RT dependencies
-#  command: make fixdeps
-#  args:
-#    chdir: /opt/src/{{ rt_version }}
-#  when: testdeps|failed
-#  environment:
-#    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
-#    PERLBREW_ROOT: /opt/perl5
-#
 #- name: Install RT
 #  command: make install
 #  args:

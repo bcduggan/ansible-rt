@@ -30,7 +30,7 @@
   delegate_to: localhost
 
 # synchronize in pull mode is broken in Ansible 2?
-- name: Sync cpanm
+- name: Sync cpanm cache
   become: no
   command: >
     /usr/bin/rsync -az
@@ -41,7 +41,6 @@
     {{ ansible_ssh_user }}@{{ ansible_ssh_host }}:/home/vagrant/.cpanm/
     {{ lookup('env','HOME') }}/ansible/vagrant/rt/cpanm
   delegate_to: localhost
-  notify: Sync /usr/local
 
 # synchronize in pull mode is broken in Ansible 2?
 - name: Sync /usr/local

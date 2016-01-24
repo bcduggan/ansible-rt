@@ -1,17 +1,11 @@
 ---
 
-- name: no keepcache=0
-  lineinfile:
-    dest: /etc/yum.conf
-    line: keepcache=0
-    state: absent
-  
 - name: keepcache=1
-  lineinfile:
+  replace:
     dest: /etc/yum.conf
-    line: keepcache=1
-    state: present
-  
+    regexp: ^keepcache=0$
+    replace: keepcache=1
+
 - name: Install CentOS Development tools
   yum:
     name: "@Development tools"
@@ -20,6 +14,9 @@
 
 - name: Install Perl 5.10.1
   include: perl_5.10.1.yml
+
+#- name: Configure CPAN
+#  include: cpan.yml
   
 - name: Install RT
   include: rt.yml
