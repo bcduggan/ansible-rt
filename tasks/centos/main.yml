@@ -1,9 +1,0 @@
----
-- include: rt_rpm_deps.yml
-
-- name: Copy cached CPAN modules for perl 5.10.1 to host
-  synchronize:
-    mode: push
-    src: centos/opt/perl5/
-    dest: /opt/perl5
-    

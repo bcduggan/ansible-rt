@@ -1,5 +1,6 @@
 ---
-- name: Install CPAN deps for perlbrew
+- include_vars: perlbrew_rpm_deps.yml
+- name: Install CPAN deps for perlbrew from yum
   yum:
     name: "{{ item }}"
     state: latest
@@ -15,7 +16,6 @@
     name: "Pod::Find"
     system_lib: yes
   notify:
-    - Sync cpanm cache
     - Sync /usr/local
 
 - name: Install perlbrew
@@ -24,7 +24,6 @@
     name: "App::perlbrew"
     system_lib: yes
   notify:
-    - Sync cpanm
     - Sync /usr/local
 
 - name: Set PERLBREW_ROOT
@@ -57,40 +56,14 @@
   notify: Sync /opt/perl5
   when: "'perl-5.10.1' not in perlbrew_list_result.stdout"
 
-- name: Source perlbrew bashrc
+- name: Source perlbrew bashrc in login shells
   lineinfile:
     dest: /etc/profile
     line: source ${PERLBREW_ROOT}/etc/bashrc
     state: present
 
-- name: Switch to perl 5.10.1
+- name: Switch to perl 5.10.1 in login shells
   lineinfile:
     dest: /etc/profile
     line: perlbrew switch 5.10.1
     state: present
-  
-### TODO: Verify local perlbrew cache containing perl 5.10.1 and CPAN deps for RT
-### TODO: Install cache under perlbrew_root to PERLBREW_ROOT on host
-##- name: Sync cached perl 5.10.1 packages to RT host
-##  local_action: stat path=roles/bcduggan.rt/files/centos/MANIFEST_perlbrew_root
-##  sudo: no
-##  register: cache_presence
-##
-##- debug:
-##    var: cache_presence
-##  
-##- name: Sync cached perl 5.10.1 and CPAN deps for RT to host
-##  synchronize:
-##    src: ../../files/centos/perlbrew_root/
-##    dest: /opt/perl5
-##    owner: no
-##    group: no
-##    checksum: yes
-##    rsync_path: "sudo rsync"
-##  register: perl_sync_result
-##  ignore_errors: True
-##    
-##- debug:
-##    var: perl_sync_result
-#    
-

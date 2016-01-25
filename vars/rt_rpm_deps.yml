@@ -1,0 +1,8 @@
+---
+rt_rpm_deps:
+  - openssl-devel
+  - graphviz-devel
+  - libxml2-devel
+  - expat-devel
+  - gd-devel
+  - mariadb-devel

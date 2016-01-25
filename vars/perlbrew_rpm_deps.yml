@@ -1,0 +1,10 @@
+---
+perlbrew_rpm_deps:
+  - perl-Capture-Tiny
+  - perl-Test-Simple
+  - perl-Test-Output
+  - perl-Test-NoWarnings
+  - perl-Test-Exception
+  - perl-local-lib
+  - perl-File-Temp
+  - perl-App-cpanminus

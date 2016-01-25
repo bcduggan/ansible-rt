@@ -1,9 +1,0 @@
----
-
-## Test whether development RPMs are installed
-- command: yum -q list installed {{ item }}
-  with_items: "{{ devel_rpm_deps }}"
-  register: result
-  changed_when: false
-  ignore_errors: true
-  failed_when: result|failed

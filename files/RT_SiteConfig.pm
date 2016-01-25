@@ -16,8 +16,12 @@
 #
 # You must restart your webserver after making changes to this file.
 
-Set( $rtname, '127.0.0.1');
-Set( $WebPort, 8080);
+Set( $rtname, "{{ rt_name }}");
+Set( $Organization "{{ rt_hostname }}");
+
+Set( $WebBaseURL, "{{ rt_scheme }}://{{ rt_hostname }}");
+Set( $WebPath, "{{ rt_webpath }}");
+Set( $WebPort, "{{ rt_port }}");
 
 # You must install Plugins on your own, this is only an example
 # of the correct syntax to use when activating them:

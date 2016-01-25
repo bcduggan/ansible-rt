@@ -1,18 +1,8 @@
 ---
-perlbrew_rpm_deps:
-  - perl-Capture-Tiny
-  - perl-Test-Simple
-  - perl-Test-Output
-  - perl-Test-NoWarnings
-  - perl-Test-Exception
-  - perl-local-lib
-  - perl-File-Temp
-  - perl-App-cpanminus
-  
-rt_rpm_deps:
-  - openssl-devel
-  - graphviz-devel
-  - libxml2-devel
-  - expat-devel
-  - gd-devel
-  - mariadb-devel
+rt_version: rt_4.2.12
+rt_name: myrt
+rt_hostname: rt.local
+rt_scheme: http
+rt_webpath: /
+rt_port: 8080
+rt_timezone: US/Eastern

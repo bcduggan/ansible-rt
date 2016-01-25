@@ -1,0 +1,213 @@
+/opt/perl5/perls/perl-5.10.1/bin/perl ./sbin/rt-test-dependencies --verbose --with-mysql --with-fastcgi
+perl:
+	>=5.10.1(5.10.1) ...found
+users:
+	rt group (nobody) ...found
+	bin owner (root) ...found
+	libs owner (root) ...found
+	libs group (bin) ...found
+	web owner (nobody) ...found
+	web group (nobody) ...found
+CLI dependencies:
+	Text::ParseWords ...found
+	Term::ReadKey ...found
+	Getopt::Long >= 2.24 ...found
+	HTTP::Request::Common ...MISSING
+	Term::ReadLine ...found
+	LWP ...MISSING
+CORE dependencies:
+	Storable >= 2.08 ...found
+	Encode >= 2.64 ...MISSING
+	Crypt::Eksblowfish ...MISSING
+	Module::Versions::Report >= 1.05 ...found
+	List::MoreUtils ...found
+	Errno ...found
+	DBI >= 1.37 ...found
+	Devel::StackTrace >= 1.19 ...found
+	HTTP::Message >= 6.0 ...MISSING
+	Text::Password::Pronounceable ...found
+	Devel::GlobalDestruction ...found
+	Time::ParseDate ...found
+	IPC::Run3 ...found
+	Tree::Simple >= 1.04 ...found
+	HTML::Scrubber >= 0.08 ...MISSING
+	HTML::Quoted ...found
+	Sys::Syslog >= 0.16 ...found
+	Mail::Mailer >= 1.57 ...found
+	Data::GUID ...MISSING
+	HTML::Mason >= 1.43 ...MISSING
+	HTML::Entities ...found
+	LWP::Simple ...MISSING
+	Symbol::Global::Name >= 0.04 ...found
+	DateTime::Format::Natural >= 0.67 ...found
+	Plack >= 1.0002 ...MISSING
+	File::Glob ...found
+	Text::Wrapper ...found
+	Regexp::Common::net::CIDR ...found
+	Log::Dispatch >= 2.30 ...MISSING
+	HTML::FormatText::WithLinks::AndTables ...MISSING
+	DateTime >= 0.44 ...found
+	CGI::Emulate::PSGI ...MISSING
+	Text::Quoted >= 2.07 ...found
+	Regexp::IPv6 ...found
+	CGI >= 3.38 ...found
+	Class::Accessor::Fast ...found
+	CSS::Squish >= 0.06 ...MISSING
+	DateTime::Locale >= 0.40 ...found
+	CGI::PSGI >= 0.12 ...found
+	Apache::Session >= 1.53 ...found
+	Date::Extract >= 0.02 ...MISSING
+	Digest::SHA ...found
+	HTML::Mason::PSGIHandler >= 0.52 ...MISSING
+	MIME::Entity >= 5.504 ...found
+	Locale::Maketext::Lexicon >= 0.32 ...found
+	Module::Refresh >= 0.03 ...MISSING
+	Role::Basic >= 0.12 ...found
+	Digest::base ...found
+	File::Temp >= 0.19 ...found
+	Date::Manip ...found
+	Locale::Maketext >= 1.06 ...found
+	HTML::RewriteAttributes >= 0.05 ...MISSING
+	Text::Template >= 1.44 ...found
+	CGI::Cookie >= 1.20 ...found
+	Scalar::Util ...found
+	XML::RSS >= 1.05 ...MISSING
+	File::Spec >= 0.8 ...found
+	Text::WikiFormat >= 0.76 ...MISSING
+	DBIx::SearchBuilder >= 1.65 ...found
+	File::ShareDir ...found
+	Regexp::Common ...found
+	Digest::MD5 >= 2.27 ...found
+	HTML::FormatText::WithLinks >= 0.14 ...MISSING
+	Mail::Header >= 2.12 ...found
+	Locale::Maketext::Fuzzy >= 0.11 ...found
+	Time::HiRes ...found
+	Email::Address::List >= 0.02 ...MISSING
+	Net::CIDR ...found
+	JSON ...found
+	UNIVERSAL::require ...found
+	Email::Address >= 1.897 ...MISSING
+	Plack::Handler::Starlet ...MISSING
+DASHBOARDS dependencies:
+	URI::QueryParam ...MISSING
+	URI >= 1.59 ...MISSING
+	MIME::Types ...found
+DEVELOPER dependencies:
+	Test::Email ...found
+	Email::Abstract ...found
+	Test::Deep ...found
+	Set::Tiny ...found
+	String::ShellQuote ...found
+	Test::MockTime ...found
+	File::Which ...found
+	File::Find ...found
+	Test::WWW::Mechanize::PSGI ...MISSING
+	Locale::PO ...found
+	Test::Expect >= 0.31 ...MISSING
+	Test::Warn ...found
+	Plack::Middleware::Test::StashWarnings >= 0.08 ...MISSING
+	Log::Dispatch::Perl ...MISSING
+	Test::NoWarnings ...found
+	Test::Builder >= 0.90 ...found
+	Test::LongString ...found
+	WWW::Mechanize >= 1.52 ...MISSING
+	XML::Simple ...MISSING
+	Test::Pod ...found
+	Mojo::DOM ...found
+	Test::WWW::Mechanize >= 1.30 ...MISSING
+FASTCGI dependencies:
+	FCGI::ProcManager ...found
+	FCGI >= 0.74 ...found
+GD dependencies:
+	GD::Text ...MISSING
+	GD ...MISSING
+	GD::Graph >= 1.47 ...MISSING
+GPG dependencies:
+	File::Which ...found
+	PerlIO::eol ...found
+	GnuPG::Interface ...MISSING
+GRAPHVIZ dependencies:
+	IPC::Run >= 0.90 ...found
+	GraphViz ...MISSING
+HTML-DOC dependencies:
+	Pod::Simple >= 3.24 ...MISSING
+	HTML::Entities ...found
+ICAL dependencies:
+	Data::ICal ...found
+MAILGATE dependencies:
+	Pod::Usage ...found
+	LWP::UserAgent >= 6.0 ...MISSING
+	Crypt::SSLeay ...MISSING
+	Getopt::Long ...found
+	Net::SSL ...MISSING
+	LWP::Protocol::https ...MISSING
+	Mozilla::CA ...found
+MYSQL dependencies:
+	DBD::mysql >= 2.1018 ...found
+SMIME dependencies:
+	String::ShellQuote ...found
+	File::Which ...found
+	Crypt::X509 ...found
+USERLOGO dependencies:
+	Convert::Color ...found
+
+SOME DEPENDENCIES WERE MISSING.
+DASHBOARDS missing dependencies:
+	URI >= 1.59 ...MISSING
+	URI::QueryParam ...MISSING
+MAILGATE missing dependencies:
+	LWP::UserAgent >= 6.0 ...MISSING
+	Net::SSL ...MISSING
+	LWP::Protocol::https ...MISSING
+	Crypt::SSLeay ...MISSING
+CLI missing dependencies:
+	HTTP::Request::Common ...MISSING
+	LWP ...MISSING
+GRAPHVIZ missing dependencies:
+	GraphViz ...MISSING
+GPG missing dependencies:
+	GnuPG::Interface ...MISSING
+DEVELOPER missing dependencies:
+	WWW::Mechanize >= 1.52 ...MISSING
+	Test::WWW::Mechanize::PSGI ...MISSING
+	Plack::Middleware::Test::StashWarnings >= 0.08 ...MISSING
+	Log::Dispatch::Perl ...MISSING
+	XML::Simple ...MISSING
+	Test::Expect >= 0.31 ...MISSING
+	Test::WWW::Mechanize >= 1.30 ...MISSING
+GD missing dependencies:
+	GD::Graph >= 1.47 ...MISSING
+	GD::Text ...MISSING
+	GD ...MISSING
+HTML-DOC missing dependencies:
+	Pod::Simple >= 3.24 ...MISSING
+CORE missing dependencies:
+	HTML::Scrubber >= 0.08 ...MISSING
+	CGI::Emulate::PSGI ...MISSING
+	XML::RSS >= 1.05 ...MISSING
+	Text::WikiFormat >= 0.76 ...MISSING
+	Encode >= 2.64 ...MISSING
+	Crypt::Eksblowfish ...MISSING
+	CSS::Squish >= 0.06 ...MISSING
+	Data::GUID ...MISSING
+	HTML::Mason >= 1.43 ...MISSING
+	Date::Extract >= 0.02 ...MISSING
+	HTML::Mason::PSGIHandler >= 0.52 ...MISSING
+	LWP::Simple ...MISSING
+	HTML::FormatText::WithLinks >= 0.14 ...MISSING
+	Plack >= 1.0002 ...MISSING
+	Module::Refresh >= 0.03 ...MISSING
+	Email::Address::List >= 0.02 ...MISSING
+	HTTP::Message >= 6.0 ...MISSING
+	HTML::FormatText::WithLinks::AndTables ...MISSING
+	Log::Dispatch >= 2.30 ...MISSING
+	HTML::RewriteAttributes >= 0.05 ...MISSING
+	Email::Address >= 1.897 ...MISSING
+	Plack::Handler::Starlet ...MISSING
+
+Perl library path for /opt/perl5/perls/perl-5.10.1/bin/perl:
+    /opt/perl5/perls/perl-5.10.1/lib/5.10.1/x86_64-linux
+    /opt/perl5/perls/perl-5.10.1/lib/5.10.1
+    /opt/perl5/perls/perl-5.10.1/lib/site_perl/5.10.1/x86_64-linux
+    /opt/perl5/perls/perl-5.10.1/lib/site_perl/5.10.1
+    .
