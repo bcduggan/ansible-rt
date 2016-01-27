@@ -1,4 +1,10 @@
 ---
+- name: Install Apache
+  include: apache.yml
+
+- name: Install MariaDB
+  include: mysql.yml
+
 - name: keepcache=1
   replace:
     dest: /etc/yum.conf

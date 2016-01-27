@@ -1,7 +1,7 @@
 ---
 - name: Restart Apache
   service:
-    name: apache2
+    name: httpd
     state: restarted
 
 - name: Clear Mason cache

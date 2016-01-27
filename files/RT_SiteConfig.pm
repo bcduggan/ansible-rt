@@ -17,7 +17,7 @@
 # You must restart your webserver after making changes to this file.
 
 Set( $rtname, "{{ rt_name }}");
-Set( $Organization "{{ rt_hostname }}");
+Set( $Organization, "{{ rt_hostname }}");
 
 Set( $WebBaseURL, "{{ rt_scheme }}://{{ rt_hostname }}");
 Set( $WebPath, "{{ rt_webpath }}");

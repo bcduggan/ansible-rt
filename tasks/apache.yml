@@ -1,30 +1,39 @@
 ---
-#- name: Install Apache
-#  apt:
-#    name: apache2
-#    state: present
-#
-#- name: Install FastCGI module for Apache
-#  apt:
-#    name: libapache2-mod-fcgid
-#    state: present
-#
-#- name: Configure mod_fcgid
-#  lineinfile:
-#    dest: /etc/apache2/mods-available/fcgid.conf
-#    line: "  FcgidMaxRequestLen 1073741824"
-#    insertafter: "  FcgidConnectTimeout 20"
-#    state: present
-#
-#- include: mysql.yml
-#
-#- name: Install build-essential
-#  apt:
-#    name: build-essential
-#    state: present
+- name: Install Apache
+  yum:
+    name: httpd
+    state: present
+  notify: Sync yum cache
 
-#- include: centos/perl_5.10.1_rt_deps.yml
-#  when: ansible_distribution == 'CentOS'
+- name: Enable Apache
+  service:
+    name: httpd
+    enabled: yes
+    
+- name: Install FastCGI module for Apache
+  yum:
+    name: mod_fcgid
+    state: present
+  notify: Sync yum cache
+
+# Increase mod_fcgid request size to handle attachments in RT
+# https://www.bestpractical.com/docs/rt/4.2.12/web_deployment.html
+- name: Configure mod_fcgid
+  lineinfile:
+    dest: /etc/httpd/conf.d/fcgid.conf
+    line: FcgidMaxRequestLen 1073741824
+    state: present
+
+- name: Configure Apache RT site
+  copy:
+    src: httpd.conf
+    dest: /etc/httpd/conf/httpd.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+    
+#- include: mysql.yml
 
 #- name: Test rt4 database presence
 #  shell: /usr/bin/mysql --user=root --password={{ mysql_root_password }} --batch --execute='show databases;' | grep --quiet rt4
@@ -35,25 +44,6 @@
 #- include: install_rt.yml
 #  when: db_test|failed
 
-#- name: Configure Apache RT site
-#  copy:
-#    src: 001-rt.conf
-#    dest: /etc/apache2/sites-available/001-rt.conf
-#    owner: root
-#    group: root
-#    mode: 0644
-#
-#- name: Disable default Apache site
-#  file:
-#    path: /etc/apache2/sites-enabled/000-default.conf
-#    state: absent
-#
-#- name: Enable Apache RT site
-#  file:
-#    path: /etc/apache2/sites-enabled/001-rt.conf
-#    state: link
-#    src: /etc/apache2/sites-available/001-rt.conf
-#  notify: Restart Apache
 #
 #- include: install_rt_ext.yml
 #  vars:

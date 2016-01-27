@@ -1,21 +1,69 @@
 ---
-## mysql_root_password must not contain special chars
-## TODO: fix that.
-- name: Install MariaDB server
-  shell: |
-    export DEBIAN_FRONTEND="noninteractive"
-    debconf-set-selections <<< "mariadb-server mysql-server/root_password password {{ mysql_root_password }}"
-    debconf-set-selections <<< "mariadb-server mysql-server/root_password_again password {{ mysql_root_password }}"
-    aptitude install -y mariadb-server
-  args:
-      executable: /bin/bash
+- name: Install mariadb-server
+  yum:
+    name: mariadb-server
+    state: present
+  notify: Sync yum cache
 
-## Following tasks taken from mysql_secure_installation
-- name: Delete anonymous MariaDB users
-  command: mysql --user=root --password={{ mysql_root_password }} -e "DELETE FROM mysql.user WHERE User='';"
+- name: Enable MariaDB
+  service:
+    name: mariadb
+    enabled: yes
+
+- name: Start MariaDB
+  service:
+    name: mariadb
+    state: started
+
+- name: Get MariaDB status
+  command: >
+    /bin/mysqladmin --user=root --password={{ mysql_root_password }}
+    status
+  register: mariadb_status_result
+  changed_when: False
+  failed_when: False
+
+- name: Set root MariaDB password
+  command: >
+    /bin/mysqladmin --user=root --password=''
+    password '{{ mysql_root_password }}'
+  when: mariadb_status_result|failed
+
+- name: Reload MariaDB privilege tables
+  command: >
+    /bin/mysql --user=root --password={{ mysql_root_password }}
+    -e "FLUSH PRIVILEGES;"
+  changed_when: False
+    
+- name: Remove anonymous MariaDB users
+  command: >
+    /bin/mysql --user=root --password={{ mysql_root_password }}
+    -e "DELETE FROM mysql.user WHERE User='';"
+  changed_when: False
 
 - name: Disallow remote root MariaDB login
-  command: mysql --user=root --password={{ mysql_root_password }} -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
+  command: >
+    /bin/mysql --user=root --password={{ mysql_root_password }}
+    -e "DELETE FROM mysql.user WHERE User='root'
+    AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
+  changed_when: False
 
-- name: Reload privilege table
-  command: mysql --user=root --password={{ mysql_root_password }} -e "FLUSH PRIVILEGES;"
+- name: Drop test MariaDB database
+  command: >
+    /bin/mysql --user=root --password={{ mysql_root_password }}
+    -e "DROP DATABASE test;"
+  changed_when: False
+  failed_when: False
+
+- name: Remove privileges on test MariaDB database
+  command: >
+    /bin/mysql --user=root --password={{ mysql_root_password }}
+    "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+  changed_when: False
+  failed_when: False
+
+- name: Reload MariaDB privilege table
+  command: >
+    /bin/mysql --user=root --password={{ mysql_root_password }}
+    -e "FLUSH PRIVILEGES;"
+  changed_when: False

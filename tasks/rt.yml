@@ -96,16 +96,24 @@
     chdir: /opt/src/{{ rt_version }}
 
 - name: Install RT_SiteConfig.pm
-  copy:
-    src: RT_SiteConfig.pm
+  template:
+    src: files/RT_SiteConfig.pm
     dest: /opt/rt4/etc/RT_SiteConfig.pm
-    owner: root
-    group: www-data
-    mode: 0440
-#  notify: Restart Apache
-    
-#- name: Initialize RT database
-#  shell: echo {{ mysql_root_password }} | make initialize-database
-#  args:
-#    chdir: /tmp/{{ rt_version }}
-#
+    owner: apache
+    group: apache
+    mode: 0640
+    backup: yes
+  notify: Restart Apache
+
+- name: Initialize RT database
+  shell: echo {{ mysql_root_password }} | make initialize-database
+  args:
+    chdir: /opt/src//{{ rt_version }}
+
+- name: Fix RT directory permissions
+  file:
+    path: /opt/rt4
+    recurse: yes
+    owner: apache
+    group: apache
+  

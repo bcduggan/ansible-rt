@@ -3,6 +3,6 @@ rt_version: rt_4.2.12
 rt_name: myrt
 rt_hostname: rt.local
 rt_scheme: http
-rt_webpath: /
+rt_webpath:
 rt_port: 8080
 rt_timezone: US/Eastern
