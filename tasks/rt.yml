@@ -41,7 +41,8 @@
   file:
     path: /opt/src
     state: directory
-    
+
+- include_vars: rt_versions.yml
 - name: Download RT
   get_url:
     url: https://download.bestpractical.com/pub/rt/release/{{ rt_version }}.tar.gz
@@ -73,7 +74,7 @@
     --enable-smime
   args:
     chdir: /opt/src/{{ rt_version }}
-    creates: /opt/src/{{ rt_version }}/etc/RT_config.pm
+    creates: /opt/src/{{ rt_version }}/config.status
 
 - name: Test RT dependencies
   shell: |
@@ -94,26 +95,58 @@
     make install
   args:
     chdir: /opt/src/{{ rt_version }}
+    creates: /opt/rt4
 
 - name: Install RT_SiteConfig.pm
   template:
     src: files/RT_SiteConfig.pm
     dest: /opt/rt4/etc/RT_SiteConfig.pm
-    owner: apache
-    group: apache
-    mode: 0640
     backup: yes
   notify: Restart Apache
+
+- name: Test rt4 database presence
+  command: >
+    /bin/mysql --user=root --password={{ mysql_root_password }}
+    --batch --execute='show databases;'
+  register: rt4_db_test
+  changed_when: False
 
 - name: Initialize RT database
   shell: echo {{ mysql_root_password }} | make initialize-database
   args:
     chdir: /opt/src//{{ rt_version }}
+  when: '"rt4" not in rt4_db_test.stdout_lines'
 
-- name: Fix RT directory permissions
+- name: Set RT directory attributes
   file:
     path: /opt/rt4
     recurse: yes
-    owner: apache
-    group: apache
-  
+    owner: root
+    group: root
+    mode: o+r
+    seuser: system_u
+    serole: object_r
+    setype: httpd_sys_content_t
+
+- name: Set RT server fcgi script attributes
+  file:
+    path: /opt/rt4/sbin/rt-server.fcgi
+    owner: root
+    group: root
+    mode: o+r
+    setype: httpd_sys_script_exec_t
+
+- name: Set RT Mason data attributes
+  file:
+    path: /opt/rt4/var/mason_data
+    owner: root
+    group: root
+    mode: o+rx
+    
+- name: Set RT Mason obj attributes
+  file:
+    path: /opt/rt4/var/mason_data/obj
+    owner: root
+    group: root
+    mode: o+rwx
+    setype: httpd_fastcgi_rw_content_t

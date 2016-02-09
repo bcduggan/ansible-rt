@@ -19,9 +19,12 @@
 Set( $rtname, "{{ rt_name }}");
 Set( $Organization, "{{ rt_hostname }}");
 
+{% if {{ rt_port }} %}
+Set( $WebBaseURL, "{{ rt_scheme }}://{{ rt_hostname }}:{{ rt_port }}");
+{% else %}
 Set( $WebBaseURL, "{{ rt_scheme }}://{{ rt_hostname }}");
+{% endif %}
 Set( $WebPath, "{{ rt_webpath }}");
-Set( $WebPort, "{{ rt_port }}");
 
 # You must install Plugins on your own, this is only an example
 # of the correct syntax to use when activating them:
