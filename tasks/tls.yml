@@ -1,0 +1,58 @@
+---
+- name: Install EPEL GPG key
+  rpm_key:
+    key: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
+    state: present
+    validate_certs: yes
+
+- name: Install haveged from EPEL
+  yum:
+    name: https://dl.fedoraproject.org/pub/epel/7/x86_64/h/haveged-1.9.1-1.el7.x86_64.rpm
+    state: present
+
+- name: Enable haveged
+  service:
+    name: haveged
+    enabled: yes
+
+- name: Start haveged
+  service:
+    name: haveged
+    state: started
+
+- name: Generate private TLS key
+  command: >-
+    openssl genrsa
+    -out /etc/pki/tls/private/localhost.key
+    2048
+  args:
+    creates: /etc/pki/tls/private/localhost.key
+
+- name: Copy openssl config file
+  template:
+    src: roles/ansible-rt/files/openssl.req.conf
+    dest: /root/openssl.req.conf
+
+- name: Generate TLS CSR
+  command: >-
+    openssl req
+    -config /root/openssl.req.conf
+    -new
+    -key /etc/pki/tls/private/localhost.key
+    -out /etc/pki/tls/private/localhost.csr
+  args:
+    creates: /etc/pki/tls/private/localhost.csr
+
+- name: Generate self-signed TLS key
+  command: >-
+    openssl x509
+    -req
+    -days 365
+    -in /etc/pki/tls/private/localhost.csr
+    -signkey /etc/pki/tls/private/localhost.key
+    -out /etc/pki/tls/certs/localhost.crt
+  args:
+    creates: /etc/pki/tls/certs/localhost.crt
+
+- name: Relabel new key, csr, and cert
+  command: restorecon -RvF /etc/pki

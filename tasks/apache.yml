@@ -24,6 +24,12 @@
     line: FcgidMaxRequestLen 1073741824
     state: present
 
+- name: Install mod_ssl
+  yum:
+    name: mod_ssl
+    state: present
+  notify: Sync yum cache
+    
 - name: Configure Apache RT site
   copy:
     src: httpd.conf
@@ -35,11 +41,6 @@
     
 #- include: mysql.yml
 
-#- name: Test rt4 database presence
-#  shell: /usr/bin/mysql --user=root --password={{ mysql_root_password }} --batch --execute='show databases;' | grep --quiet rt4
-#  register: db_test
-#  failed_when: False
-#  changed_when: False
 #  
 #- include: install_rt.yml
 #  when: db_test|failed
