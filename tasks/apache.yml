@@ -60,7 +60,7 @@
     setype: httpd_config_t
 
 - name: Configure Apache RT site
-  copy:
+  template:
     src: roles/ansible-rt/files/rt.conf
     dest: /etc/httpd/sites-available/rt.conf
     owner: root

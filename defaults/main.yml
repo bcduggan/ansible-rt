@@ -1,9 +1,16 @@
 ---
 rt_version: rt-4.2.12
-rt_name: myrt
+rt_name: My RT
 rt_hostname: rt.local
-rt_scheme: http
 rt_webpath:
 rt_port: 8443
 rt_timezone: US/Eastern
+
+tls_country: US
+tls_state: DC
+tls_city: Washington
+tls_organization: My Organization
+tls_organization_unit: My Project
+
 package_cache_dir: cache
+
