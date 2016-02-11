@@ -1,4 +1,7 @@
 ---
+- name: Setup TLS
+  include: tls.yml
+
 - name: Install Apache
   include: apache.yml
 

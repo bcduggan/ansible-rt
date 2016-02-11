@@ -29,23 +29,58 @@
     name: mod_ssl
     state: present
   notify: Sync yum cache
-    
+
+- name: Insert sites-enabled include in httpd.conf
+  lineinfile:
+    line: IncludeOptional sites-enabled/*.conf
+    state: present
+    dest: /etc/httpd/conf/httpd.conf
+    insertafter: IncludeOptional conf.d/*.conf
+
+- name: Create sites-available
+  file:
+    path: /etc/httpd/sites-available
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    seuser: system_u
+    serole: object_r
+    setype: httpd_config_t
+
+- name: Create sites-enabled
+  file:
+    path: /etc/httpd/sites-enabled
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    seuser: system_u
+    serole: object_r
+    setype: httpd_config_t
+
 - name: Configure Apache RT site
   copy:
-    src: httpd.conf
-    dest: /etc/httpd/conf/httpd.conf
+    src: roles/ansible-rt/files/rt.conf
+    dest: /etc/httpd/sites-available/rt.conf
     owner: root
     group: root
     mode: 0644
-    backup: yes
+    seuser: system_u
+    serole: object_r
+    setype: httpd_config_t
+
+- name: Enable Apache RT site
+  file:
+    path: /etc/httpd/sites-enabled/rt.conf
+    state: link
+    src: /etc/httpd/sites-available/rt.conf
+    owner: root
+    group: root
+    seuser: system_u
+    serole: object_r
+    setype: httpd_config_t
     
-#- include: mysql.yml
-
-#  
-#- include: install_rt.yml
-#  when: db_test|failed
-
-#
 #- include: install_rt_ext.yml
 #  vars:
 #    ext: "{{ extensions.ResetPassword }}"

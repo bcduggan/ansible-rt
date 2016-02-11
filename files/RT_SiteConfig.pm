@@ -19,7 +19,7 @@
 Set( $rtname, "{{ rt_name }}");
 Set( $Organization, "{{ rt_hostname }}");
 
-{% if {{ rt_port }} %}
+{% if ansible_virtualization_role == "guest" %}
 Set( $WebBaseURL, "{{ rt_scheme }}://{{ rt_hostname }}:{{ rt_port }}");
 {% else %}
 Set( $WebBaseURL, "{{ rt_scheme }}://{{ rt_hostname }}");
