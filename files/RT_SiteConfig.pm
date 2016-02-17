@@ -19,12 +19,9 @@
 Set( $rtname, "{{ rt_name }}");
 Set( $Organization, "{{ rt_hostname }}");
 
-{% if ansible_virtualization_role == "guest" %}
-Set( $WebBaseURL, "https://{{ rt_hostname }}:{{ rt_port }}");
-{% else %}
-Set( $WebBaseURL, "https://{{ rt_hostname }}");
-{% endif %}
-Set( $WebPath, "{{ rt_webpath }}");
+Set( $WebDomain, "{{ rt_hostname }}");
+Set( $WebPort, "{{ rt_port }}");
+Set( $WebPath, "");
 
 # You must install Plugins on your own, this is only an example
 # of the correct syntax to use when activating them:
