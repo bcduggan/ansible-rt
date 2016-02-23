@@ -61,7 +61,7 @@
 
 - name: Configure Apache RT site
   template:
-    src: roles/ansible-rt/files/rt.conf
+    src: rt.conf
     dest: /etc/httpd/sites-available/rt.conf
     owner: root
     group: root
