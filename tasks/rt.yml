@@ -49,11 +49,10 @@
 
 - name: Test RT dependencies
   environment:
-      PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
     perlbrew use 5.10.1
-    #/usr/local/bin/perlbrew switch 5.10.1
     make testdeps
   args:
     chdir: /opt/src/{{ rt_version }}
@@ -61,6 +60,26 @@
   changed_when: False
   failed_when: False
 
+- include_vars: pinned_cpan_packages.yml
+- name: Install pinned CPAN packages
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+  shell: |
+    source ${PERLBREW_ROOT}/etc/bashrc
+    perlbrew use 5.10.1
+    cpanm {{ item }}
+  notify: Sync /opt/perl5
+  register: perlbrew_cpanm_result
+  changed_when: >
+    perlbrew_cpanm_result|success and
+    perlbrew_cpanm_result.stdout_lines|length > 1
+  with_items: perl_5_10_1
+
+#  SOME DEPENDENCIES WERE MISSING.
+#  DEVELOPER missing dependencies:
+#    Test::Expect >= 0.31 ...MISSING
+#  CORE missing dependencies:
+#    HTML::Mason::PSGIHandler >= 0.52 ...MISSING
 - name: Fix RT dependencies
   environment:
     PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
@@ -71,6 +90,7 @@
     make fixdeps
   args:
     chdir: /opt/src/{{ rt_version }}
+  when: testdeps|failed
   
 ## TODO: Investigate running make fixdeps with
 ## RT_FIX_DEPS_CMD=/opt/perl/bin/cpanm
