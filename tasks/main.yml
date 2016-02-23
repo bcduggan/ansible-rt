@@ -1,6 +1,7 @@
 ---
 - name: Synchronize package caches
   include: push.yml
+  when: ansible_virtualization_role is "guest"
 
 - name: keepcache=1
   replace:

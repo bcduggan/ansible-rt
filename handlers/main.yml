@@ -17,74 +17,22 @@
     src: /var/cache/yum/
     dest: cache/{{ ansible_hostname }}/var.cache.yum
     dest_port: 22
+  when: ansible_virtualization_role is "guest"
 
 - name: Pull /usr/local
   become: no
   synchronize:
     mode: pull
-    src: /var/cache/yum/
-    dest: cache/{{ ansible_hostname }}/var.cache.yum
+    src: /usr/local/
+    dest: cache/{{ ansible_hostname }}/usr.local
     dest_port: 22
-    
-# HEADSUP for rsync commands: Vagrant hosts typically have
-# StrictHostKeyChecking=no somewhere in the vagrant->ansible->rsync->ssh chain.
-# If this command results in error due to a nonexistant file, rsync's error output
-# will spend most of its characters complaining that the remote host key has
-# changed on 'vagrant up'. But the real error is still a nonexistant file.
-  
-# synchronize in pull mode is broken in Ansible 2?
-#- name: Sync yum cache
-#  become: no
-#  command: >
-#    /usr/bin/rsync -az
-#    -e "ssh -p {{ ansible_ssh_port }}
-#    -i {{ ansible_ssh_private_key_file }}
-#    -l {{ ansible_ssh_user }}
-#    -o StrictHostKeyChecking=no"
-#    {{ ansible_ssh_user }}@{{ ansible_ssh_host }}:/var/cache/yum/
-#    {{ lookup('env','HOME') }}/ansible/vagrant/rt/yum
-#  delegate_to: localhost
-#  when: ansible_virtualization_role == "guest"
+  when: ansible_virtualization_role is "guest"
 
-  
-# synchronize in pull mode is broken in Ansible 2?
-#- name: Sync cpanm cache
-#  become: no
-#  command: >
-#    /usr/bin/rsync -az
-#    -e "ssh -p {{ ansible_ssh_port }}
-#    -i {{ ansible_ssh_private_key_file }}
-#    -l {{ ansible_ssh_user }}
-#    -o StrictHostKeyChecking=no"
-#    {{ ansible_ssh_user }}@{{ ansible_ssh_host }}:/home/vagrant/.cpanm/
-#    {{ lookup('env','HOME') }}/ansible/vagrant/rt/cpanm
-#  delegate_to: localhost
-#  when: ansible_virtualization_role == "guest"
-#
-## synchronize in pull mode is broken in Ansible 2?
-#- name: Sync /usr/local
-#  become: no
-#  command: >
-#    /usr/bin/rsync -az
-#    -e "ssh -p {{ ansible_ssh_port }}
-#    -i {{ ansible_ssh_private_key_file }}
-#    -l {{ ansible_ssh_user }}
-#    -o StrictHostKeyChecking=no"
-#    {{ ansible_ssh_user }}@{{ ansible_ssh_host }}:/usr/local/
-#    {{ lookup('env','HOME') }}/ansible/vagrant/rt/local
-#  delegate_to: localhost
-#  when: ansible_virtualization_role == "guest"
-#
-## synchronize in pull mode is broken in Ansible 2?
-#- name: Sync /opt/perl5
-#  become: no
-#  command: >
-#    /usr/bin/rsync -az
-#    -e "ssh -p {{ ansible_ssh_port }}
-#    -i {{ ansible_ssh_private_key_file }}
-#    -l {{ ansible_ssh_user }}
-#    -o StrictHostKeyChecking=no"
-#    {{ ansible_ssh_user }}@{{ ansible_ssh_host }}:/opt/perl5/
-#    {{ lookup('env','HOME') }}/ansible/vagrant/rt/perl5
-#  delegate_to: localhost
-#  when: ansible_virtualization_role == "guest"
+- name: Pull /opt/perl5
+  become: no
+  synchronize:
+    mode: pull
+    src: /opt/perl5
+    dest: cache/{{ ansible_hostname }}/opt.perl5
+    dest_port: 22
+  when: ansible_virtualization_role is "guest"
