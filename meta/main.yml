@@ -3,11 +3,11 @@ galaxy_info:
   author: Brian Duggan
   description: Install Request Tracker
   license: GPLv3
-  min_ansible_version: 1.9
+  min_ansible_version: 2.0.0.2
   platforms:
-  - name: Debian
+  - name: CentOS
     versions:
-      - jessie
+      - 7
   categories:
   - development
   - web
