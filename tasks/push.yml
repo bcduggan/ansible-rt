@@ -1,4 +1,22 @@
 ---
+- name: Create local /var/cache/yum cache dir
+  file:
+    path: cache/{{ ansible_hostname }}/var.cache.yum
+    state: directory
+    delegate_to: localhost
+    
+- name: Create local /usr/local cache dir
+  file:
+    path: cache/{{ ansible_hostname }}/usr.local
+    state: directory
+    delegate_to: localhost
+
+- name: Create local /opt/perl5 cache dir
+  file:
+    path: cache/{{ ansible_hostname }}/opt.perl5
+    state: directory
+    delegate_to: localhost
+
 # Need dest_port because 'vagrant provision' will impose its default, otherwise.
 - name: Push /var/cache/yum
   become: no
