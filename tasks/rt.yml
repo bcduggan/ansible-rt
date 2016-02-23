@@ -5,7 +5,7 @@
     name: "{{ item }}"
     state: installed
   with_items: "{{ rt_rpm_deps }}"
-  notify: Sync yum cache
+  notify: Pull /var/cache/yum
 
 
 - name: Create /opt/src
@@ -57,6 +57,8 @@
   register: testdeps
   changed_when: False
 
+## TODO: Investigate running make fixdeps with
+## RT_FIX_DEPS_CMD=/opt/perl/bin/cpanm
 - include_vars: rt_cpan_deps.yml
 - name: Install RT CLI deps with CPAN Minus  
   include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.CLI }}
@@ -123,7 +125,7 @@
 
 - name: Install RT_SiteConfig.pm
   template:
-    src: files/RT_SiteConfig.pm
+    src: RT_SiteConfig.pm
     dest: /opt/rt4/etc/RT_SiteConfig.pm
     backup: yes
   notify: Restart Apache

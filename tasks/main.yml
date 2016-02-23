@@ -1,12 +1,6 @@
 ---
-- name: Setup TLS
-  include: tls.yml
-
-- name: Install Apache
-  include: apache.yml
-
-- name: Install MariaDB
-  include: mysql.yml
+- name: Synchronize package caches
+  include: push.yml
 
 - name: keepcache=1
   replace:
@@ -18,7 +12,16 @@
   yum:
     name: "@Development tools"
     state: installed
-  notify: Sync yum cache
+  notify: Pull yum cache
+  
+- name: Setup TLS
+  include: tls.yml
+
+- name: Install Apache
+  include: apache.yml
+
+- name: Install MariaDB
+  include: mysql.yml
 
 - name: Install Perl 5.10.1
   include: perl_5.10.1.yml

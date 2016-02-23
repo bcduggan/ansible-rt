@@ -1,5 +1,4 @@
 ---
-
 - name: Download RT extension tarball
   get_url:
     url: "{{ ext.url_base }}/{{ ext.name }}-{{ ext.version }}.tar.gz"

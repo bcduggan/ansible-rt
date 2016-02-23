@@ -5,7 +5,7 @@
     name: "{{ item }}"
     state: latest
   with_items: "{{ perlbrew_rpm_deps }}"
-  notify: Sync yum cache
+  notify: Pull /var/cache/yum
 
 # Missed Pod::Usage dependency
 # perlbrew will fail to install Pod::Usage >= 1.64
@@ -15,16 +15,14 @@
   cpanm:
     name: "Pod::Find"
     system_lib: yes
-  notify:
-    - Sync /usr/local
+  notify: Pull /usr/local
 
 - name: Install perlbrew
   become: no
   cpanm:
     name: "App::perlbrew"
     system_lib: yes
-  notify:
-    - Sync /usr/local
+  notify: Pull /usr/local
 
 - name: Set PERLBREW_ROOT
   lineinfile:
@@ -40,7 +38,7 @@
   command: /usr/local/bin/perlbrew install-cpanm
   args:
     creates: /opt/perl5/bin/cpanm
-  notify: Sync /opt/perl5
+  notify: Pull /opt/perl5
 
 - name: List perl installations
   command: /usr/local/bin/perlbrew list
@@ -53,7 +51,7 @@
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
     /usr/local/bin/perlbrew install 5.10.1
-  notify: Sync /opt/perl5
+  notify: Pull /opt/perl5
   when: "'perl-5.10.1' not in perlbrew_list_result.stdout"
 
 - name: Source perlbrew bashrc in login shells

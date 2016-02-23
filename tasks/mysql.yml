@@ -3,7 +3,7 @@
   yum:
     name: mariadb-server
     state: present
-  notify: Sync yum cache
+  notify: Pull /var/cache/yum
 
 - name: Enable MariaDB
   service:

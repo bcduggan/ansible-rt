@@ -30,7 +30,7 @@
 
 - name: Copy openssl config file
   template:
-    src: files/openssl.req.conf
+    src: openssl.req.conf
     dest: /root/openssl.req.conf
 
 - name: Generate TLS CSR
