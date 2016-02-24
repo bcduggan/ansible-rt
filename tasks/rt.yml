@@ -7,7 +7,6 @@
   with_items: "{{ rt_rpm_deps }}"
   notify: Pull /var/cache/yum
 
-
 - name: Create /opt/src
   file:
     path: /opt/src
@@ -75,11 +74,6 @@
     perlbrew_cpanm_result.stdout_lines|length > 1
   with_items: perl_5_10_1
 
-#  SOME DEPENDENCIES WERE MISSING.
-#  DEVELOPER missing dependencies:
-#    Test::Expect >= 0.31 ...MISSING
-#  CORE missing dependencies:
-#    HTML::Mason::PSGIHandler >= 0.52 ...MISSING
 - name: Fix RT dependencies
   environment:
     PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
@@ -92,52 +86,6 @@
     chdir: /opt/src/{{ rt_version }}
   when: testdeps|failed
   
-## TODO: Investigate running make fixdeps with
-## RT_FIX_DEPS_CMD=/opt/perl/bin/cpanm
-#- include_vars: rt_cpan_deps.yml
-#- name: Install RT CLI deps with CPAN Minus  
-#  include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.CLI }}
-#  when: testdeps|failed
-#- name: Install RT CORE deps with CPAN Minus  
-#  include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.CORE }}
-#  when: testdeps|failed
-#- name: Install RT DASHBOARDS deps with CPAN Minus  
-#  include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.DASHBOARDS }}
-#  when: testdeps|failed
-#- name: Install RT DEVELOPER deps with CPAN Minus  
-#  include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.DEVELOPER }}
-#  when: testdeps|failed
-#- name: Install RT FASTCGI deps with CPAN Minus  
-#  include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.FASTCGI }}
-#  when: testdeps|failed
-#- name: Install RT GD deps with CPAN Minus  
-#  include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.GD }}
-#  when: testdeps|failed
-#- name: Install RT GPG deps with CPAN Minus  
-#  include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.GPG }}
-#  when: testdeps|failed
-#- name: Install RT GRAPHVIZ deps with CPAN Minus  
-#  include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.GRAPHVIZ }}
-#  when: testdeps|failed
-#- name: Install RT HTML-DOC deps with CPAN Minus  
-#  include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.HTMLDOC }}
-#  when: testdeps|failed
-#- name: Install RT ICAL deps with CPAN Minus  
-#  include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.ICAL }}
-#  when: testdeps|failed
-#- name: Install RT MAILGATE deps with CPAN Minus  
-#  include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.MAILGATE }}
-#  when: testdeps|failed
-#- name: Install RT MYSQL deps with CPAN Minus  
-#  include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.MYSQL }}
-#  when: testdeps|failed
-#- name: Install RT SMIME deps with CPAN Minus  
-#  include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.SMIME }}
-#  when: testdeps|failed
-#- name: Install RT USERLOGO deps with CPAN Minus  
-#  include: perlbrew_cpanm.yml packages={{ rt_cpan_deps.USERLOGO }}
-#  when: testdeps|failed
-
 # Probably unnecessary
 - name: Test RT dependencies (again)
   shell: |

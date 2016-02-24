@@ -24,7 +24,7 @@
 - name: Push /var/cache/yum
   become: no
   synchronize:
-    src: cache/{{ ansible_hostname }}/var.cache.yum/
+    src: cache/{{ ansible_hostname }}/var.cache.yum
     dest: /var/cache/yum
     dest_port: 22
     rsync_path: "sudo rsync"
@@ -32,7 +32,7 @@
 - name: Push /usr/local
   become: no
   synchronize:
-    src: cache/{{ ansible_hostname }}/usr.local/
+    src: cache/{{ ansible_hostname }}/usr.local
     dest: /usr/local
     dest_port: 22
     rsync_path: "sudo rsync"
@@ -40,7 +40,7 @@
 - name: Push /opt/perl5
   become: no
   synchronize:
-    src: cache/{{ ansible_hostname }}/opt.perl5/
+    src: cache/{{ ansible_hostname }}/opt.perl5
     dest: /opt/perl5
     dest_port: 22
     rsync_path: "sudo rsync"
