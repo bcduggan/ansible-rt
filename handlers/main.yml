@@ -14,7 +14,7 @@
   become: no
   synchronize:
     mode: pull
-    src: /var/cache/yum
+    src: /var/cache/yum/
     dest: cache/{{ ansible_hostname }}/var.cache.yum
     dest_port: 22
   when: ansible_virtualization_role == "guest"
@@ -23,7 +23,7 @@
   become: no
   synchronize:
     mode: pull
-    src: /usr/local
+    src: /usr/local/
     dest: cache/{{ ansible_hostname }}/usr.local
     dest_port: 22
   when: ansible_virtualization_role == "guest"
@@ -32,7 +32,7 @@
   become: no
   synchronize:
     mode: pull
-    src: /opt/perl5
+    src: /opt/perl5/
     dest: cache/{{ ansible_hostname }}/opt.perl5
     dest_port: 22
   when: ansible_virtualization_role == "guest"
