@@ -1,8 +1,4 @@
 ---
-- name: Synchronize package caches
-  include: push.yml
-  when: ansible_virtualization_role == "guest"
-
 - name: keepcache=1
   replace:
     dest: /etc/yum.conf
