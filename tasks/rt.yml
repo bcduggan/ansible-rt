@@ -1,4 +1,12 @@
 ---
+- name: Push requesttracker.pp SELinux policy module
+  copy:
+    src: requesttracker.pp
+    dest: /root/requesttracker.pp
+  
+- name: Enable requesttracker.pp SELinux policy module
+  command: semodule -i /root/requesttracker.pp
+  
 - include_vars: rt_rpm_deps.yml
 - name: Install RPM deps for RT
   yum:
