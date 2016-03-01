@@ -54,5 +54,10 @@
   args:
     creates: /etc/pki/tls/certs/localhost.crt
 
-- name: Relabel new key, csr, and cert
+# Ansible thinks restorecon always changes something.
+# I believe that with the -v flag, empty stdout and rc==0
+# means that restorecon didn't change any labels.
+- name: Label new key, csr, and cert
   command: restorecon -RvF /etc/pki
+  register: label_result
+  changed_when: label_result.stdout
