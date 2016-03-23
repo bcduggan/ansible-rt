@@ -1,10 +1,16 @@
 ---
 rt_version: rt-4.2.12
 rt_name: My RT
-rt_hostname: rt.local
+rt_hostname: "{{ ansible_hostname }}.local"
 rt_webpath:
 rt_port: 443
 rt_timezone: US/Eastern
+rt_features:
+  - developer
+  - graphviz
+  - gd
+  - gpg
+  - smime
 
 tls_country: US
 tls_state: DC
@@ -14,3 +20,4 @@ tls_organization_unit: My Project
 
 package_cache_dir: cache
 
+perl_version: 5.10.1
