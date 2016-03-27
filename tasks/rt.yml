@@ -119,9 +119,9 @@
   when: '"rt4" not in rt4_db_test.stdout_lines'
 
 # Might still need this?  
-#- name: Set RT Mason data attributes
-#  file:
-#    path: /opt/rt4/var/mason_data
-#    owner: root
-#    group: root
-#    mode: o+rx
+- name: Set RT Mason data attributes
+  file:
+    path: /opt/rt4/var/mason_data
+    owner: root
+    group: root
+    mode: o+rx
