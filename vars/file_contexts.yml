@@ -1,0 +1,17 @@
+file_contexts:
+  - file_spec: /opt/rt4(/.*)*
+    seuser: system_u
+    type: httpd_sys_content_t
+    ftype: a
+  - file_spec: /opt/rt4/sbin/rt-server.fcgi
+    seuser: system_u
+    type: httpd_sys_script_exec_t
+    ftype: a
+  - file_spec: /opt/rt4/var/log(/.*)*
+    seuser: system_u
+    type: httpd_sys_rw_content_t
+    ftype: a
+  - file_spec: /opt/rt4/var/mason_data/obj(/.*)*
+    seuser: system_u
+    type: httpd_sys_rw_content_t
+    ftype: a

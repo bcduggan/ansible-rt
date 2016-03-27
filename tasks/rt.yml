@@ -1,12 +1,4 @@
 ---
-- name: Push requesttracker.pp SELinux policy module
-  copy:
-    src: requesttracker.pp
-    dest: /root/requesttracker.pp
-  
-- name: Enable requesttracker.pp SELinux policy module
-  command: semodule -i /root/requesttracker.pp
-  
 - include_vars: rt_rpm_deps.yml
 - name: Install RPM deps for RT
   yum:
@@ -135,36 +127,10 @@
     chdir: /opt/src//{{ rt_version }}
   when: '"rt4" not in rt4_db_test.stdout_lines'
 
-- name: Set RT directory attributes
-  file:
-    path: /opt/rt4
-    recurse: yes
-    owner: root
-    group: root
-    mode: o+r
-    seuser: system_u
-    serole: object_r
-    setype: httpd_sys_content_t
-
-- name: Set RT server fcgi script attributes
-  file:
-    path: /opt/rt4/sbin/rt-server.fcgi
-    owner: root
-    group: root
-    mode: o+r
-    setype: httpd_sys_script_exec_t
-
-- name: Set RT Mason data attributes
-  file:
-    path: /opt/rt4/var/mason_data
-    owner: root
-    group: root
-    mode: o+rx
-    
-- name: Set RT Mason obj attributes
-  file:
-    path: /opt/rt4/var/mason_data/obj
-    owner: root
-    group: root
-    mode: o+rwx
-    setype: httpd_fastcgi_rw_content_t
+# Might still need this?  
+#- name: Set RT Mason data attributes
+#  file:
+#    path: /opt/rt4/var/mason_data
+#    owner: root
+#    group: root
+#    mode: o+rx

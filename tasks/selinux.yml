@@ -1,0 +1,48 @@
+---
+- name: Push RT fcontext fact file
+  template:
+    src: fcontext_rt.fact
+    dest: /etc/ansible/facts.d/fcontext_rt.fact
+    mode: 0755
+
+- name: Push requesttracker.pp SELinux policy module
+  copy:
+    src: requesttracker.pp
+    dest: /root/requesttracker.pp
+  
+- name: Enable requesttracker.pp SELinux policy module
+  command: semodule -i /root/requesttracker.pp
+
+- include_vars: file_contexts.yml
+  
+- block:
+    
+    - name: Remove fcontext rules specific to RT
+      command: >-
+        /sbin/semanage fcontext --delete
+        --type {{ item.type }}
+        --ftype {{ item.ftype }}
+        '{{ item.file_spec }}'
+      with_items: "{{ ansible_local.fcontext_rt }}"
+        
+    - name: Create fcontext rules for RT
+      command: >-
+        /sbin/semanage fcontext --add
+        --seuser {{ item.seuser }}
+        --type {{ item.type }}
+        --ftype {{ item.ftype }}
+        '{{ item.file_spec }}'
+      with_items: "{{ file_contexts }}"
+      
+  when: ( ansible_local.fcontext_rt != file_contexts ) and
+        ansible_local.fcontext_rt
+
+- name: Restore current RT file contexts
+  file:
+    path: /opt/rt4
+    state: directory
+    recurse: yes
+    seuser: _default
+    serole: _default
+    setype: _default
+    selevel: _default

@@ -1,6 +1,6 @@
 ---
 - name: keepcache=1
-  replace:
+  replace: 
     dest: /etc/yum.conf
     regexp: ^keepcache=0$
     replace: keepcache=1
@@ -10,7 +10,10 @@
     name: "@Development tools"
     state: installed
   notify: Pull yum cache
-  
+
+- name: Setup SELinux for RT
+  include: selinux.yml
+
 - name: Setup TLS
   include: tls.yml
 
@@ -25,3 +28,4 @@
 
 - name: Install RT
   include: rt.yml
+

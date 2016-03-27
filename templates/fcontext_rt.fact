@@ -1,0 +1,43 @@
+#!/bin/bash
+
+/sbin/semanage fcontext -lCn \
+    | awk -f <(sed -e '/[B]EGIN_AWK1/,/[E]ND_AWK1/!d' $0)
+
+exit $PIPESTATUS
+
+# a: all files
+# f: regular file
+# d: directory
+# c: character device
+# b: block device
+# s: socket
+# l: symbolic link
+# p: named pipe
+
+#BEGIN_AWK1
+BEGIN { printf ("[") }
+NR>1 { printf (",") }
+/opt/rt4 {
+    if ($2 == "all")
+       ftype = "a";
+    else if ($2 == "regular")
+       ftype = "f";
+    else if ($2 == "directory")
+       ftype = "d";
+    else if ($2 == "character")
+       ftype = "c";		    
+    else if ($2 == "block")
+       ftype = "b";
+    else if ($2 == "socket")
+       ftype = "s";
+    else if ($2 == "symbolic")	    
+       ftype = "l";
+    else if ($2 == "named")
+       ftype = "p";
+	    
+    split($NF, ctx, ":")
+       
+    printf "{\"file_spec\":\"%s\",\"ftype\":\"%s\",\"seuser\":\"%s\",\"type\":\"%s\"}", $1, ftype, ctx[1], ctx[3]
+}
+END { print "]" }
+#END_AWK1
