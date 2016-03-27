@@ -31,8 +31,6 @@
     group: root
 
 - name: Configure RT
-  environment:
-    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
     perlbrew switch 5.10.1
@@ -47,8 +45,6 @@
     creates: /opt/src/{{ rt_version }}/config.status
 
 - name: Test RT dependencies
-  environment:
-    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
     perlbrew use 5.10.1
@@ -61,8 +57,6 @@
 
 - include_vars: pinned_cpan_packages.yml
 - name: Install pinned CPAN packages
-  environment:
-    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
     perlbrew use 5.10.1
@@ -76,7 +70,6 @@
 
 - name: Fix RT dependencies
   environment:
-    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
     RT_FIX_DEPS_CMD: /opt/perl5/bin/cpanm
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
@@ -97,8 +90,6 @@
   changed_when: False
   
 - name: Install RT
-  environment:
-    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
     /usr/local/bin/perlbrew switch 5.10.1
