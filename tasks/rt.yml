@@ -72,7 +72,7 @@
   changed_when: >
     perlbrew_cpanm_result|success and
     perlbrew_cpanm_result.stdout_lines|length > 1
-  with_items: perl_5_10_1
+  with_items: "{{ perl_5_10_1 }}"
 
 - name: Fix RT dependencies
   environment:
