@@ -1,4 +1,15 @@
 ---
+- name: Install policycoreutils-python
+  yum:
+    name: policycoreutils-python
+    state: installed
+  notify: Pull yum cache
+
+- include: local_facts.yml
+
+- name: Setup SELinux for RT
+  include: selinux.yml
+  
 - name: keepcache=1
   replace: 
     dest: /etc/yum.conf
@@ -10,9 +21,6 @@
     name: "@Development tools"
     state: installed
   notify: Pull yum cache
-
-- name: Setup SELinux for RT
-  include: selinux.yml
 
 - name: Setup TLS
   include: tls.yml

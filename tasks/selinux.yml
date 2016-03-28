@@ -1,20 +1,16 @@
 ---
-- name: Push RT fcontext fact file
-  template:
-    src: fcontext_rt.fact
-    dest: /etc/ansible/facts.d/fcontext_rt.fact
-    mode: 0755
+# This prevents a permission denied error when RT tries to use /tmp.
+- name: Enable httpd_unified SELinux boolean
+  seboolean:
+    name: httpd_unified
+    state: yes
+    persistent: yes
 
-- name: Push requesttracker.pp SELinux policy module
-  copy:
-    src: requesttracker.pp
-    dest: /root/requesttracker.pp
-  
-- name: Enable requesttracker.pp SELinux policy module
-  command: semodule -i /root/requesttracker.pp
-
+# At some point, may want to roll this into a proper RT policy.
+# Right now, it's very convenient to set file contexts from Ansible without
+# needing to compile an entirely new policy module and installing it.
 - include_vars: file_contexts.yml
-  
+
 - block:
     
     - name: Remove fcontext rules specific to RT
@@ -23,7 +19,8 @@
         --type {{ item.type }}
         --ftype {{ item.ftype }}
         '{{ item.file_spec }}'
-      with_items: "{{ ansible_local.fcontext_rt }}"
+      with_items: "{{ ansible_local.rt_fcontext }}"
+      when: ansible_local.rt_fcontext
         
     - name: Create fcontext rules for RT
       command: >-
@@ -34,10 +31,9 @@
         '{{ item.file_spec }}'
       with_items: "{{ file_contexts }}"
       
-  when: ( ansible_local.fcontext_rt != file_contexts ) and
-        ansible_local.fcontext_rt
-
-- name: Restore current RT file contexts
+  when: ansible_local.rt_fcontext != file_contexts
+    
+- name: Restore default RT file contexts
   file:
     path: /opt/rt4
     state: directory

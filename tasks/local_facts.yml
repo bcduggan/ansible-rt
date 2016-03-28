@@ -1,0 +1,29 @@
+---
+- name: Create /etc/ansible/facts.d
+  file:
+    path: /etc/ansible/facts.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+    seuser: _default
+    serole: _default
+    setype: _default
+    selevel: _default
+
+- name: Push local fact files and templates
+  template:
+    src: "{{ item }}"
+    dest: /etc/ansible/facts.d/{{ item|basename }}
+    owner: root
+    group: root
+    mode: 0755
+    seuser: _default
+    serole: _default
+    setype: _default
+    selevel: _default
+  with_fileglob:
+    - ./*.fact
+    - ../templates/*.fact
+    
+  
