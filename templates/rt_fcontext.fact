@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[ -x /sbin/semanage ] || ( echo "[]"; exit 0 )
+
 /sbin/semanage fcontext -lCn \
     | awk -f <(sed -e '/[B]EGIN_AWK1/,/[E]ND_AWK1/!d' $0)
 
