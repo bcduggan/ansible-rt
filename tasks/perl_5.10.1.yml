@@ -30,10 +30,14 @@
     dest: /etc/profile.d/perlbrew.sh
 
 - name: Init perlbrew
+  environment:
+    PERLBREW_ROOT: /opt/perl5
   command: /usr/local/bin/perlbrew init
   changed_when: False
 
 - name: Install perlbrew cpanm
+  environment:
+    PERLBREW_ROOT: /opt/perl5
   command: /usr/local/bin/perlbrew install-cpanm
   args:
     creates: /opt/perl5/bin/cpanm
@@ -46,12 +50,13 @@
   register: perlbrew_list_result
   changed_when: False
 
-- name: Install perl 5.10.1
+#    PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+#source ${PERLBREW_ROOT}/etc/bashrc
+- name: Install preferred perl version
   environment:
-    PERLBREW_ROOT: /opt/perl5
     PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
-  shell: |
-    source ${PERLBREW_ROOT}/etc/bashrc
-    /usr/local/bin/perlbrew install 5.10.1
+    PERLBREW_ROOT: /opt/perl5
+  command: /usr/local/bin/perlbrew install {{ perl_version }}
   notify: Pull /opt/perl5
   when: "'perl-5.10.1' not in perlbrew_list_result.stdout"
+

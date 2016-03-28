@@ -1,4 +1,4 @@
 ---
 perl_5_10_1:
   - Test::Expect@0.32
-  
+  - Starlet@0.19
