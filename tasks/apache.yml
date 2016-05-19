@@ -3,7 +3,6 @@
   yum:
     name: httpd
     state: present
-  notify: Pull /var/cache/yum
 
 - name: Enable Apache
   service:
@@ -14,7 +13,6 @@
   yum:
     name: mod_fcgid
     state: present
-  notify: Pull /var/cache/yum
 
 # Increase mod_fcgid request size to handle attachments in RT
 # https://www.bestpractical.com/docs/rt/4.2.12/web_deployment.html
@@ -28,7 +26,6 @@
   yum:
     name: mod_ssl
     state: present
-  notify: Pull /var/cache/yum
 
 - name: Insert sites-enabled include in httpd.conf
   lineinfile:

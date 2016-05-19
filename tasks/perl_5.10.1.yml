@@ -5,7 +5,6 @@
     name: "{{ item }}"
     state: latest
   with_items: "{{ perlbrew_rpm_deps }}"
-  notify: Pull /var/cache/yum
 
 # Missed Pod::Usage dependency
 # perlbrew will fail to install Pod::Usage >= 1.64
@@ -15,14 +14,12 @@
   cpanm:
     name: "Pod::Find"
     system_lib: yes
-  notify: Pull /usr/local
 
 - name: Install perlbrew
   become: no
   cpanm:
     name: "App::perlbrew"
     system_lib: yes
-  notify: Pull /usr/local
 
 - name: Push perlbrew.sh
   template:
@@ -41,7 +38,6 @@
   command: /usr/local/bin/perlbrew install-cpanm
   args:
     creates: /opt/perl5/bin/cpanm
-  notify: Pull /opt/perl5
 
 - name: List perl installations
   environment:
@@ -57,6 +53,4 @@
     PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
     PERLBREW_ROOT: /opt/perl5
   command: /usr/local/bin/perlbrew install {{ perl_version }}
-  notify: Pull /opt/perl5
   when: "'perl-5.10.1' not in perlbrew_list_result.stdout"
-

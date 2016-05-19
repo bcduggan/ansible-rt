@@ -5,7 +5,6 @@
     name: "{{ item }}"
     state: installed
   with_items: "{{ rt_rpm_deps }}"
-  notify: Pull /var/cache/yum
 
 - name: Create /opt/src
   file:
@@ -61,7 +60,6 @@
     source ${PERLBREW_ROOT}/etc/bashrc
     perlbrew use 5.10.1
     cpanm {{ item }}
-  notify: Sync /opt/perl5
   register: perlbrew_cpanm_result
   changed_when: >
     perlbrew_cpanm_result|success and

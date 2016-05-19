@@ -3,7 +3,6 @@
   yum:
     name: policycoreutils-python
     state: installed
-  notify: Pull yum cache
 
 - include: local_facts.yml
 
@@ -21,7 +20,6 @@
   yum:
     name: "@Development tools"
     state: installed
-  notify: Pull yum cache
 
 - name: Setup TLS
   include: tls.yml
