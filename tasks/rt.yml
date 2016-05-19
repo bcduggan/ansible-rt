@@ -125,3 +125,8 @@
     owner: root
     group: root
     mode: o+rx
+
+- name: Push rt4.sh
+  template:
+    src: rt4.sh
+    dest: /etc/profile.d/rt4.sh
