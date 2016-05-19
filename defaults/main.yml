@@ -18,6 +18,8 @@ tls_city: Washington
 tls_organization: My Organization
 tls_organization_unit: My Project
 
+selinux: no
+
 package_cache_dir: cache
 
 perl_version: 5.10.1
