@@ -1,4 +1,9 @@
 ---
+# Mail::Header needed for
+# - MIME::Entity
+# - Test::Email
+# - Email::Abstract
 perl_5_10_1:
   - Test::Expect@0.32
   - Starlet@0.19
+  - Mail::Header@2.14
