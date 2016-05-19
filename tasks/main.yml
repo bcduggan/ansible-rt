@@ -9,6 +9,7 @@
 
 - name: Setup SELinux for RT
   include: selinux.yml
+  when: selinux
   
 - name: keepcache=1
   replace: 

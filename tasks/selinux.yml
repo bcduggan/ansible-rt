@@ -1,4 +1,9 @@
 ---
+- name: Enable SELinux
+  selinux:
+    state: enforcing
+    policy: targeted
+
 # This prevents a permission denied error when RT tries to use /tmp.
 - name: Enable httpd_unified SELinux boolean
   seboolean:
