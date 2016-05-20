@@ -30,8 +30,8 @@
 - name: Install MariaDB
   include: mysql.yml
 
-- name: Install Perl 5.10.1
-  include: perl_5.10.1.yml
+- name: Install Perl
+  include: perl.yml
 
 - name: Install RT
   include: rt.yml
