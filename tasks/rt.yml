@@ -1,5 +1,6 @@
 ---
 - include_vars: rt_rpm_deps.yml
+
 - name: Install RPM deps for RT
   yum:
     name: "{{ item }}"
@@ -50,43 +51,36 @@
     make testdeps
   args:
     chdir: /opt/src/{{ rt_version }}
-  register: testdeps
+  register: rt_testdeps
   changed_when: False
   failed_when: False
 
-- include_vars: pinned_cpan_packages.yml
-- name: Install pinned CPAN packages
-  shell: |
-    source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew use 5.10.1
-    cpanm {{ item }}
-  register: perlbrew_cpanm_result
-  changed_when: >
-    perlbrew_cpanm_result|success and
-    perlbrew_cpanm_result.stdout_lines|length > 1
-  with_items: "{{ perl_5_10_1 }}"
+- block:
+    - include_vars: pinned_cpan_packages.yml
 
-- name: Fix RT dependencies
-  environment:
-    RT_FIX_DEPS_CMD: /opt/perl5/bin/cpanm
-  shell: |
-    source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew use 5.10.1
-    make fixdeps
-  args:
-    chdir: /opt/src/{{ rt_version }}
-  when: testdeps|failed
-  
-# Probably unnecessary
-- name: Test RT dependencies (again)
-  shell: |
-    source ${PERLBREW_ROOT}/etc/bashrc
-    /usr/local/bin/perlbrew switch 5.10.1
-    make testdeps
-  args:
-    chdir: /opt/src/{{ rt_version }}
-  changed_when: False
-  
+    - name: Install pinned CPAN packages
+      shell: |
+        source ${PERLBREW_ROOT}/etc/bashrc
+        perlbrew use 5.10.1
+        cpanm {{ '--notest' if cpanm_notest else '--no-notest' }} {{ item }}
+      register: perlbrew_cpanm_result
+      changed_when: >
+        perlbrew_cpanm_result|success and
+        perlbrew_cpanm_result.stdout_lines|length > 1
+      with_items: "{{ perl_5_10_1 }}"
+
+    - name: Fix RT dependencies
+      environment:
+        RT_FIX_DEPS_CMD: /opt/perl5/bin/cpanm
+      shell: |
+        source ${PERLBREW_ROOT}/etc/bashrc
+        perlbrew use 5.10.1
+        make -j {{ansible_processor_vcpus + 1 }} fixdeps
+      args:
+        chdir: /opt/src/{{ rt_version }}
+
+  when: rt_testdeps|failed
+
 - name: Install RT
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
@@ -116,7 +110,6 @@
     chdir: /opt/src//{{ rt_version }}
   when: '"rt4" not in rt4_db_test.stdout_lines'
 
-# Might still need this?  
 - name: Set RT Mason data attributes
   file:
     path: /opt/rt4/var/mason_data

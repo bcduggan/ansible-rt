@@ -21,3 +21,4 @@ tls_organization_unit: My Project
 selinux: no
 
 perl_version: 5.10.1
+cpanm_notest: false
