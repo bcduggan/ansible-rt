@@ -22,6 +22,7 @@
       cpanm:
         name: "Pod::Find"
         system_lib: yes
+        notest: "{{ cpanm_notest }}"
 
     - name: Install perlbrew
       become: no
@@ -57,7 +58,7 @@
   environment:
     PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
     PERLBREW_ROOT: /opt/perl5
-  command: /usr/local/bin/perlbrew install -j {{ ansible_processor_vcpus + 1 }} {{ perl_version }}
+  command: /usr/local/bin/perlbrew install -j {{ ansible_processor_vcpus + 1 }} {{ '--notest' if perlbrew_notest else '' }} {{ perl_version }}
   when: "'{{ perl_version }}' not in perlbrew_list.stdout"
 
 - name: Push perlbrew.sh

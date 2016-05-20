@@ -22,3 +22,4 @@ selinux: no
 
 perl_version: 5.10.1
 cpanm_notest: false
+perlbrew_notest: false

@@ -13,6 +13,7 @@
     state: directory
 
 - include_vars: rt_versions.yml
+
 - name: Download RT
   get_url:
     url: https://download.bestpractical.com/pub/rt/release/{{ rt_version }}.tar.gz
@@ -72,6 +73,7 @@
     - name: Fix RT dependencies
       environment:
         RT_FIX_DEPS_CMD: /opt/perl5/bin/cpanm
+        PERL_CPANM_OPT: "{{ '--notest' if cpanm_notest else '--no-notest' }}"
       shell: |
         source ${PERLBREW_ROOT}/etc/bashrc
         perlbrew use 5.10.1
