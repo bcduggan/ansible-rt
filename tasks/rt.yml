@@ -63,7 +63,7 @@
       shell: |
         source ${PERLBREW_ROOT}/etc/bashrc
         perlbrew use 5.10.1
-        cpanm {{ '--notest' if cpanm_notest else '--no-notest' }} {{ item }}
+        cpanm {{ cpanm_notest | ternary('--notest','--no-notest') }} {{ item }}
       register: perlbrew_cpanm_result
       changed_when: >
         perlbrew_cpanm_result|success and
@@ -73,7 +73,7 @@
     - name: Fix RT dependencies
       environment:
         RT_FIX_DEPS_CMD: /opt/perl5/bin/cpanm
-        PERL_CPANM_OPT: "{{ '--notest' if cpanm_notest else '--no-notest' }}"
+        PERL_CPANM_OPT: "{{ cpanm_notest | ternary('--notest','--no-notest') }}"
       shell: |
         source ${PERLBREW_ROOT}/etc/bashrc
         perlbrew use 5.10.1
