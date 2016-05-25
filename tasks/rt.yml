@@ -56,9 +56,9 @@
   changed_when: False
   failed_when: False
 
+- include_vars: pinned_cpan_packages.yml
+  
 - block:
-    - include_vars: pinned_cpan_packages.yml
-
     - name: Install pinned CPAN packages
       shell: |
         source ${PERLBREW_ROOT}/etc/bashrc
@@ -119,6 +119,16 @@
     group: root
     mode: o+rx
 
+- name: Create GnuPG home directory
+  file:
+    path: /opt/rt4/var/data/gpg
+    state: directory
+
+- name: Create S/MIME home directory
+  file:
+    path: /opt/rt4/var/data/smime
+    state: directory
+    
 - name: Push rt4.sh
   template:
     src: rt4.sh

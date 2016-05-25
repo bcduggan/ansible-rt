@@ -5,8 +5,9 @@
   changed_when: false
   failed_when: false
 
+- include_vars: perlbrew_rpm_deps.yml
+  
 - block:
-    - include_vars: perlbrew_rpm_deps.yml
 
     - name: Install CPAN deps for perlbrew from yum
       yum:
