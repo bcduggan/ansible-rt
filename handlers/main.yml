@@ -9,3 +9,8 @@
     path: /opt/rt4/var/mason_data/obj
     state: absent
   notify: Restart Apache
+
+- name: Restart MariaDB
+  service:
+    name: mariadb
+    state: restarted

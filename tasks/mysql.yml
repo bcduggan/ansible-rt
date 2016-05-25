@@ -66,3 +66,17 @@
     /bin/mysql --user=root --password={{ mysql_root_password }}
     -e "FLUSH PRIVILEGES;"
   changed_when: False
+
+- name: Increase MariaDB max allowed packet size
+  lineinfile:
+    dest: /etc/my.cnf
+    line: max_allowed_packet=16M
+    insertafter: "[mysqld]"
+    state: present
+  register: mysql_packet_size
+
+- name: Restart MariaDB
+  service:
+    name: mariadb
+    state: restarted
+  when: mysql_packet_size|changed

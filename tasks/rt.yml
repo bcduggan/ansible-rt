@@ -48,7 +48,7 @@
 - name: Test RT dependencies
   shell: |
     source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew use 5.10.1
+    perlbrew switch 5.10.1
     make testdeps
   args:
     chdir: /opt/src/{{ rt_version }}
@@ -62,7 +62,7 @@
     - name: Install pinned CPAN packages
       shell: |
         source ${PERLBREW_ROOT}/etc/bashrc
-        perlbrew use 5.10.1
+        perlbrew switch 5.10.1
         cpanm {{ cpanm_notest | ternary('--notest','--no-notest') }} {{ item }}
       register: perlbrew_cpanm_result
       changed_when: >
@@ -76,12 +76,24 @@
         PERL_CPANM_OPT: "{{ cpanm_notest | ternary('--notest','--no-notest') }}"
       shell: |
         source ${PERLBREW_ROOT}/etc/bashrc
-        perlbrew use 5.10.1
+        perlbrew switch 5.10.1
         make -j {{ansible_processor_vcpus + 1 }} fixdeps
       args:
         chdir: /opt/src/{{ rt_version }}
 
   when: rt_testdeps|failed
+
+  # Several extensions depend on this module, which make fixdeps does
+  # not install
+- name: "Install DateTime::Set"
+  shell: |
+    source ${PERLBREW_ROOT}/etc/bashrc
+    perlbrew switch 5.10.1
+    cpanm {{ cpanm_notest | ternary('--notest','--no-notest') }} DateTime::Set
+  register: datetime_set_result
+  changed_when: >
+    datetime_set_result|success and
+    datetime_set_result.stdout_lines|length > 1
 
 - name: Install RT
   shell: |
@@ -92,12 +104,40 @@
     chdir: /opt/src/{{ rt_version }}
     creates: /opt/rt4
 
+- debug:
+    msg: "TODO: Assemble RT_SiteConfig.pm from parts to avoid clobbering local changes"
+
 - name: Install RT_SiteConfig.pm
   template:
     src: RT_SiteConfig.pm
     dest: /opt/rt4/etc/RT_SiteConfig.pm
     backup: yes
   notify: Restart Apache
+
+- name: Set Mason cache owner
+  set_fact:
+    cache_owner: "{{ selinux | ternary('root','apache') }}"
+
+- name: Set RT Mason cache attributes
+  file:
+    path: /opt/rt4/var/mason_data
+    owner: "{{ cache_owner }}"
+    group: "{{ cache_owner }}"
+    mode: o+rx
+
+- name: Create GnuPG home directory
+  file:
+    path: /opt/rt4/var/data/gpg
+    state: directory
+    owner: "{{ cache_owner }}"
+    group: "{{ cache_owner }}"
+
+- name: Create S/MIME home directory
+  file:
+    path: /opt/rt4/var/data/smime
+    state: directory
+    owner: "{{ cache_owner }}"
+    group: "{{ cache_owner }}"
 
 - name: Test rt4 database presence
   command: >
@@ -107,28 +147,14 @@
   changed_when: False
 
 - name: Initialize RT database
-  shell: echo {{ mysql_root_password }} | make initialize-database
+  shell: |-
+    source ${PERLBREW_ROOT}/etc/bashrc
+    perlbrew switch 5.10.1
+    echo {{ mysql_root_password }} | make initialize-database
   args:
-    chdir: /opt/src//{{ rt_version }}
+    chdir: /opt/src/{{ rt_version }}
   when: '"rt4" not in rt4_db_test.stdout_lines'
 
-- name: Set RT Mason data attributes
-  file:
-    path: /opt/rt4/var/mason_data
-    owner: root
-    group: root
-    mode: o+rx
-
-- name: Create GnuPG home directory
-  file:
-    path: /opt/rt4/var/data/gpg
-    state: directory
-
-- name: Create S/MIME home directory
-  file:
-    path: /opt/rt4/var/data/smime
-    state: directory
-    
 - name: Push rt4.sh
   template:
     src: rt4.sh
