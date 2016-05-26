@@ -35,4 +35,5 @@
 
 - name: Install RT
   include: rt.yml
-
+  tags:
+    - install_rt
