@@ -1,7 +1,7 @@
 ---
 rt_version: rt-4.2.12
 rt_name: My RT
-rt_hostname: "{{ ansible_hostname }}.local"
+rt_hostname: "{{ ansible_hostname }}"
 rt_webpath:
 rt_port: 443
 rt_timezone: US/Eastern
