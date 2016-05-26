@@ -1,4 +1,10 @@
 ---
+# Fix man and perldoc escape sequence processing
+- name: Push pager.sh
+  template:
+    src: pager.sh
+    dest: /etc/profile.d/pager.sh
+
 - name: Install policycoreutils-python
   yum:
     name: policycoreutils-python
