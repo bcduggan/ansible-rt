@@ -38,9 +38,10 @@
     ./configure \
     --enable-developer \
     --enable-graphviz \
-    --enable-gd \
-    --enable-gpg \
-    --enable-smime
+    --enable-gd
+#    --enable-gd \
+#    --enable-gpg \
+#    --enable-smime
   args:
     chdir: /opt/src/{{ rt_version }}
     creates: /opt/src/{{ rt_version }}/config.status
@@ -149,7 +150,7 @@
 - name: Initialize RT database
   shell: |-
     source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew switch 5.10.1
+    perlbrew use 5.10.1
     echo {{ mysql_root_password }} | make initialize-database
   args:
     chdir: /opt/src/{{ rt_version }}
