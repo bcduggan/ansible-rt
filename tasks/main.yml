@@ -36,9 +36,6 @@
 - name: Install MariaDB
   include: mysql.yml
 
-- name: Install Perl
-  include: perl.yml
-
 - name: Install RT
   include: rt.yml
   tags:
