@@ -1,11 +1,15 @@
 ---
-- include_vars: rt_rpm_deps.yml
-
 - name: Install RPM deps for RT
   yum:
     name: "{{ item }}"
     state: installed
-  with_items: "{{ rt_rpm_deps }}"
+  with_items:
+    - openssl-devel
+    - graphviz-devel
+    - libxml2-devel
+    - expat-devel
+    - gd-devel
+    - mariadb-devel
 
 - name: Create /opt/src
   file:
@@ -39,7 +43,6 @@
     --enable-developer \
     --enable-graphviz \
     --enable-gd
-#    --enable-gd \
 #    --enable-gpg \
 #    --enable-smime
   args:
