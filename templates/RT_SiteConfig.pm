@@ -23,6 +23,8 @@ Set( $WebDomain, "{{ rt_hostname }}");
 Set( $WebPort, "{{ rt_port }}");
 Set( $WebPath, "");
 
+Set( $DevelMode, "{{ rt_develmode }}" );
+
 # You must install Plugins on your own, this is only an example
 # of the correct syntax to use when activating them:
 #     Plugin( "RT::Extension::SLA" );

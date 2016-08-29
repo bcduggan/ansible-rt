@@ -12,6 +12,8 @@ rt_features:
   - gpg
   - smime
 
+rt_develmode: 0
+  
 tls_country: US
 tls_state: DC
 tls_city: Washington
