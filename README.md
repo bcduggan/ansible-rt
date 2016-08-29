@@ -3,7 +3,7 @@ Ansible role for Request Tracker
 
 This Ansible role installs Best Practical's Request Tracker (RT). It optionally installs certain RT extensions.
 
-https://bestpractical.com/
+https://bestpractical.com/  
 https://github.com/bestpractical/rt
 
 Requirements
@@ -20,12 +20,12 @@ This role assumes CentOS 7.2 with SELinux enabled or disabled.
 Role Variables
 --------------
 
-Check defaults/main.yml.
+Check [defaults/main.yml](defaults/main.yml).
 
-Use rt_version to select the RT version to install. See vars/rt_versions.yml for supported versions.
-Use selinux to enable or disable selinux labels.
-Use cpanm_notest to enable or disable running tests after building Perl modules.
-Use perlbrew_notest to enable or disable running tests after building the desired Perl version.
+- Use `rt_version` to select the RT version to install. See [vars/rt_versions.yml](vars/rt_versions.yml) for supported versions.
+- Use `selinux` to enable or disable selinux labels.
+- Use `cpanm_notest` to enable or disable running tests after building Perl modules.
+- Use `perlbrew_notest` to enable or disable running tests after building the desired Perl version.
 
 Dependencies
 ------------
@@ -38,10 +38,12 @@ Example Playbook
     - hosts: servers
       roles:
          - role: bcduggan.rt
-	   rt_version: rt-4.2.12
-	   selinux: true
-	   cpanm_notest: false
-	   perlbrew_notest: false
+           rt_version: rt-4.2.12
+           rt_hostname: <domain or server IP>
+           selinux: true
+           cpanm_notest: false
+           perlbrew_notest: false
+           mysql_root_password: root
 
 License
 -------
