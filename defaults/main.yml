@@ -22,6 +22,10 @@ tls_organization_unit: My Project
 
 selinux: no
 
-perl_version: 5.10.1
+perlbrew_root: /opt/perl5
+perlbrew: "{{ perlbrew_root }}/bin/perlbrew"
+perlbrew_cpanm: "{{ perlbrew_root }}/bin/cpanm"
+perl_version: perl-5.10.1
+
 cpanm_notest: false
 perlbrew_notest: false

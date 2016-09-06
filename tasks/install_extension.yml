@@ -1,0 +1,79 @@
+---
+- name: Clone RT extension
+  git:
+    repo: "{{ item.repo }}"
+    version: "{{ item.version }}"
+    dest: "/opt/src/{{ item.file_name }}"
+    force: yes
+    accept_hostkey: yes
+  when: item.source == "git"
+
+- block:
+  - name: Download RT extension tarball
+    get_url:
+      url: "{{ item.url }}"
+      dest: "/opt/src/{{ item.file_name }}.tar.gz"
+      validate_certs: yes
+      force: yes
+      checksum: "{{ item.checksum }}"
+  
+  - name: Untar and ungzip RT extension tarball
+    unarchive:
+      copy: no
+      src: "/opt/src/{{ item.file_name }}.tar.gz"
+      dest: /opt/src
+
+  when: item.source == "http"
+
+- name: Generate RT extension Makefile
+  shell: |
+    source /etc/profile.d/perlbrew.sh
+    source /etc/profile.d/rt4.sh
+    perl Makefile.PL
+  args:
+    chdir: /opt/src/{{ item.file_name }}
+    creates: /opt/src/{{ item.file_name }}/Makefile
+
+- name: Build RT extension
+  shell: |
+    source /etc/profile.d/perlbrew.sh
+    source /etc/profile.d/rt4.sh
+    make
+  args:
+    chdir: /opt/src/{{ item.file_name }}
+    creates: /opt/src/{{ item.file_name }}/blib
+
+# creates doesn't detect presence of file or directory when
+# dynamically set. This always produces a changed result.
+# Workaround: Hard code creates value
+# TODO: File bug for this
+- name: Install RT extension
+  shell: |
+    source /etc/profile.d/perlbrew.sh
+    source /etc/profile.d/rt4.sh
+    make install
+  args:
+    chdir: /opt/src/{{ item.file_name }}
+    creates: /opt/rt4/local/plugins/{{ item.file_name }}
+
+# RT_SiteConfig.pm is a loadable perl file, which always return
+# something. This file returns 1 by asserting the value "1;" on the
+# last line. We have to insert this string somewhere before that.
+- name: Enable RT extension in RT_SiteConfig.pm
+  lineinfile:
+    dest: /opt/rt4/etc/RT_SiteConfig.pm
+    line: Plugin('{{ item.module_name }}');
+    state: present
+    insertbefore: "^1;$"
+  register: RT_SiteConfig_result
+  notify: Clear Mason cache
+
+- name: Initialize RT extension database
+  shell: |
+    source /etc/profile.d/perlbrew.sh
+    source /etc/profile.d/rt4.sh
+    echo {{ mysql_root_password }} | make initialize-database
+  args:
+    chdir: /opt/src/{{ item.file_name }}
+  notify: Clear Mason cache
+  when: RT_SiteConfig_result|changed and item.initdb

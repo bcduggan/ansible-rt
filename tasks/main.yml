@@ -38,5 +38,8 @@
 
 - name: Install RT
   include: rt.yml
-  tags:
-    - install_rt
+  environment:
+    PERLBREW_ROOT: "{{ perlbrew_root }}"
+
+- name: Install RT extensions
+  include: install_extensions.yml

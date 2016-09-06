@@ -36,24 +36,20 @@
     group: root
 
 - name: Configure RT
-  shell: |
-    source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew switch 5.10.1
-    ./configure \
-    --enable-developer \
-    --enable-graphviz \
-    --enable-gd
-#    --enable-gpg \
+  command: >
+    {{ perlbrew }} exec --with perl-5.10.1
+    './configure
+    --enable-developer
+    --enable-graphviz
+    --enable-gd'
+#    --enable-gpg
 #    --enable-smime
   args:
     chdir: /opt/src/{{ rt_version }}
     creates: /opt/src/{{ rt_version }}/config.status
 
 - name: Test RT dependencies
-  shell: |
-    source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew switch 5.10.1
-    make testdeps
+  command: "{{ perlbrew }} exec --with perl-5.10.1 'make testdeps'"
   args:
     chdir: /opt/src/{{ rt_version }}
   register: rt_testdeps
@@ -64,10 +60,9 @@
   
 - block:
     - name: Install pinned CPAN packages
-      shell: |
-        source ${PERLBREW_ROOT}/etc/bashrc
-        perlbrew switch 5.10.1
-        cpanm {{ cpanm_notest | ternary('--notest','--no-notest') }} {{ item }}
+      command: >
+        {{ perlbrew }} exec --with perl-5.10.1
+        '{{ perlbrew_cpanm }} {{ cpanm_notest | ternary('--notest','--no-notest') }} {{ item }}'
       register: perlbrew_cpanm_result
       changed_when: >
         perlbrew_cpanm_result|success and
@@ -76,40 +71,34 @@
 
     - name: Fix RT dependencies
       environment:
-        RT_FIX_DEPS_CMD: /opt/perl5/bin/cpanm
+        RT_FIX_DEPS_CMD: "{{ perlbrew_cpanm }}"
         PERL_CPANM_OPT: "{{ cpanm_notest | ternary('--notest','--no-notest') }}"
-      shell: |
-        source ${PERLBREW_ROOT}/etc/bashrc
-        perlbrew switch 5.10.1
-        make -j {{ansible_processor_vcpus + 1 }} fixdeps
+      command: >
+        {{ perlbrew }} exec --with perl-5.10.1
+        'make -j {{ ansible_processor_vcpus + 1 }} fixdeps'
       args:
         chdir: /opt/src/{{ rt_version }}
-
+  
   when: rt_testdeps|failed
 
   # Several extensions depend on this module, which make fixdeps does
   # not install
 - name: "Install DateTime::Set"
-  shell: |
-    source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew switch 5.10.1
-    cpanm {{ cpanm_notest | ternary('--notest','--no-notest') }} DateTime::Set
+  command: >
+    {{ perlbrew }} exec --with 5.10.1
+    '{{ perlbrew_cpanm }} {{ cpanm_notest | ternary('--notest','--no-notest') }} DateTime::Set'
   register: datetime_set_result
   changed_when: >
     datetime_set_result|success and
     datetime_set_result.stdout_lines|length > 1
 
 - name: Install RT
-  shell: |
-    source ${PERLBREW_ROOT}/etc/bashrc
-    /usr/local/bin/perlbrew switch 5.10.1
-    make install
+  command: >-
+    {{ perlbrew }} exec --with perl-5.10.1
+    'make install'
   args:
     chdir: /opt/src/{{ rt_version }}
     creates: /opt/rt4
-
-- debug:
-    msg: "TODO: Assemble RT_SiteConfig.pm from parts to avoid clobbering local changes"
 
 - name: Install RT_SiteConfig.pm
   template:
@@ -151,10 +140,9 @@
   changed_when: False
 
 - name: Initialize RT database
-  shell: |-
-    source ${PERLBREW_ROOT}/etc/bashrc
-    perlbrew use 5.10.1
-    echo {{ mysql_root_password }} | make initialize-database
+  command: >
+    {{ perlbrew }} exec --with perl-5.10.1
+    'echo {{ mysql_root_password }} | make initialize-database'
   args:
     chdir: /opt/src/{{ rt_version }}
   when: '"rt4" not in rt4_db_test.stdout_lines'
