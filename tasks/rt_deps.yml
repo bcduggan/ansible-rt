@@ -1,0 +1,94 @@
+---
+- name: Install RPM deps for RT
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - openssl-devel
+    - graphviz-devel
+    - libxml2-devel
+    - expat-devel
+    - gd-devel
+    - mariadb-devel
+
+- name: Create /opt/src
+  file:
+    path: /opt/src
+    state: directory
+
+- include_vars: rt_versions.yml
+
+- name: Download RT
+  get_url:
+    url: https://download.bestpractical.com/pub/rt/release/{{ rt_version }}.tar.gz
+    dest: /opt/src/{{ rt_version }}.tar.gz
+    validate_certs: yes
+    sha256sum: "{{ rt[rt_version].checksum }}"
+    force: no
+
+- name: Untar and ungzip RT
+  unarchive:
+    copy: no
+    src: /opt/src/{{ rt_version }}.tar.gz
+    dest: /opt/src
+    creates: /opt/src/{{ rt_version }}
+    owner: root
+    group: root
+
+- name: Configure RT
+  command: >
+    {{ perlbrew }} exec --with perl-5.10.1
+    './configure
+    --enable-developer
+    --enable-graphviz
+    --enable-gd'
+#    --enable-gpg
+#    --enable-smime
+  args:
+    chdir: /opt/src/{{ rt_version }}
+    creates: /opt/src/{{ rt_version }}/config.status
+
+- name: Test RT dependencies
+  command: "{{ perlbrew }} exec --with perl-5.10.1 'make testdeps'"
+  args:
+    chdir: /opt/src/{{ rt_version }}
+  register: rt_testdeps
+  changed_when: False
+  failed_when: False
+
+- include_vars: pinned_cpan_packages.yml
+
+- block:
+    - name: Install pinned CPAN packages
+      command: >
+        {{ perlbrew }} exec --with perl-5.10.1
+        '{{ perlbrew_cpanm }} {{ cpanm_notest | ternary('--notest','--no-notest') }} {{ item }}'
+      register: perlbrew_cpanm_result
+      changed_when: >
+        perlbrew_cpanm_result|success and
+        perlbrew_cpanm_result.stdout_lines|length > 1
+      with_items: "{{ perl_5_10_1 }}"
+
+    - name: Fix RT dependencies
+      environment:
+        RT_FIX_DEPS_CMD: "{{ perlbrew_cpanm }}"
+        PERL_CPANM_OPT: "{{ cpanm_notest | ternary('--notest','--no-notest') }}"
+      command: >
+        {{ perlbrew }} exec --with perl-5.10.1
+        'make -j {{ ansible_processor_vcpus + 1 }} fixdeps'
+      args:
+        chdir: /opt/src/{{ rt_version }}
+
+  when: rt_testdeps|failed
+
+  # Several extensions depend on this module, which make fixdeps does
+  # not install
+- name: "Install DateTime::Set"
+  command: >
+    {{ perlbrew }} exec --with 5.10.1
+    '{{ perlbrew_cpanm }} {{ cpanm_notest | ternary('--notest','--no-notest') }} DateTime::Set'
+  register: datetime_set_result
+  changed_when: >
+    datetime_set_result|success and
+    datetime_set_result.stdout_lines|length > 1
+

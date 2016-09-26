@@ -14,3 +14,19 @@
   service:
     name: mariadb
     state: restarted
+
+- name: Stop MariaDB
+  service:
+    name: mariadb
+    state: stopped
+  notify:
+    Remove innodb log files
+
+- name: Remove innodb log files
+  file:
+    path: "/var/lib/mysql/{{ item }}"
+    state: absent
+  with_items:
+    - ib_logfile0
+    - ib_logfile1
+  notify: Restart MariaDB

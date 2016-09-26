@@ -31,5 +31,5 @@
     group: root
   with_items: "{{ deploy_public_keys }}"
 
-- include: tasks/install_extension.yml
+- include: install_extension.yml
   with_items: "{{ extensions }}"

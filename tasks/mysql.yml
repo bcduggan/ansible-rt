@@ -66,17 +66,27 @@
     /bin/mysql --user=root --password={{ mysql_root_password }}
     -e "FLUSH PRIVILEGES;"
   changed_when: False
+  
+- name: Set MariaDB options
+  ini_file:
+    dest: /etc/my.cnf.d/server.cnf
+    section: "{{ item.section }}"
+    option: "{{ item.name }}"
+    value: "{{ item.value }}"
+  with_items: "{{ mysql_options }}"
+  notify: Restart MariaDB
 
-- name: Increase MariaDB max allowed packet size
-  lineinfile:
-    dest: /etc/my.cnf
-    line: max_allowed_packet=16M
-    insertafter: "[mysqld]"
-    state: present
-  register: mysql_packet_size
+# Changing innodb log file size requires special handling. This
+# handling conflicts with a simple restart.
+#
+# Here, flush all accumulated handlers so the innodb log file size
+# change handler can run in isolation
+- meta: flush_handlers
 
-- name: Restart MariaDB
-  service:
-    name: mariadb
-    state: restarted
-  when: mysql_packet_size|changed
+- name: Set innodb_log_file_size
+  ini_file:
+    dest: /etc/my.cnf.d/server.cnf
+    section: mysqld
+    option: innodb_log_file_size
+    value: "{{ mysql_innodb_log_file_size }}"
+  notify: Stop MariaDB

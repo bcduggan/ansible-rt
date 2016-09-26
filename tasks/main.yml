@@ -36,6 +36,11 @@
 - name: Install MariaDB
   include: mysql.yml
 
+- name: Install RT dependencies
+  include: rt_deps.yml
+  environment:
+    PERLBREW_ROOT: "{{ perlbrew_root }}"
+
 - name: Install RT
   include: rt.yml
   environment:
