@@ -33,9 +33,6 @@
 - name: Install Apache
   include: apache.yml
 
-- name: Install MariaDB
-  include: mysql.yml
-
 - name: Install RT dependencies
   include: rt_deps.yml
   environment:
