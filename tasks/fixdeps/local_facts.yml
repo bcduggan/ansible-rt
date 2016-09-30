@@ -25,5 +25,10 @@
   with_fileglob:
     - ./*.fact
     - ../templates/*.fact
-    
-  
+  register: push_local_facts_result
+
+- action: setup
+  when: push_local_facts_result | changed
+
+#- set_fact:
+#    rt_tasks: "{{ ansible_local.rt_versions.RT

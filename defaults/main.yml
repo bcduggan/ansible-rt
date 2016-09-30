@@ -1,5 +1,22 @@
 ---
-rt_version: rt-4.2.13
+usage: |
+  Usage:
+    - role: ansible-rt
+      ( [ fixdeps install initialize_db ] | [ refresh_rt refresh_db ] ): yes
+      ...
+
+defaults: yes
+all_defaults: yes
+fixdeps: no
+install: no
+initialize_db: no
+refresh_rt: no
+refresh_db: no
+
+src_dir: /opt/src
+rt_dir: /opt/rt4
+
+rt_version: 4.2.13
 rt_name: My RT
 rt_hostname: "{{ ansible_hostname }}"
 rt_webpath:
@@ -11,9 +28,8 @@ rt_features:
   - gd
   - gpg
   - smime
-
 rt_develmode: 0
-  
+
 tls_country: US
 tls_state: DC
 tls_city: Washington
@@ -24,8 +40,4 @@ selinux: no
 
 perlbrew_root: /opt/perl5
 perlbrew: "{{ perlbrew_root }}/bin/perlbrew"
-perlbrew_cpanm: "{{ perlbrew_root }}/bin/cpanm"
-perl_version: perl-5.10.1
 
-cpanm_notest: false
-perlbrew_notest: false

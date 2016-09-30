@@ -11,17 +11,17 @@
     - gd-devel
     - mariadb-devel
 
-- name: Create /opt/src
+- name: Create source directory
   file:
-    path: /opt/src
+    path: "{{ src_dir }}"
     state: directory
 
 - include_vars: rt_versions.yml
 
 - name: Download RT
   get_url:
-    url: https://download.bestpractical.com/pub/rt/release/{{ rt_version }}.tar.gz
-    dest: /opt/src/{{ rt_version }}.tar.gz
+    url: https://download.bestpractical.com/pub/rt/release/rt-{{ rt_version }}.tar.gz
+    dest: "{{ rt_src_dir }}.tar.gz"
     validate_certs: yes
     sha256sum: "{{ rt[rt_version].checksum }}"
     force: no
@@ -29,9 +29,9 @@
 - name: Untar and ungzip RT
   unarchive:
     copy: no
-    src: /opt/src/{{ rt_version }}.tar.gz
-    dest: /opt/src
-    creates: /opt/src/{{ rt_version }}
+    src: "{{ rt_src_tarball }}"
+    dest: "{{ src_dir }}"
+    creates: "{{ rt_src_dir }}"
     owner: root
     group: root
 
@@ -45,13 +45,13 @@
 #    --enable-gpg
 #    --enable-smime
   args:
-    chdir: /opt/src/{{ rt_version }}
-    creates: /opt/src/{{ rt_version }}/config.status
+    chdir: "{{ rt_src_dir }}"
+    creates: "{{ rt_src_dir }}/config.status"
 
 - name: Test RT dependencies
   command: "{{ perlbrew }} exec --with perl-5.10.1 'make testdeps'"
   args:
-    chdir: /opt/src/{{ rt_version }}
+    chdir: "{{ rt_src_dir }}"
   register: rt_testdeps
   changed_when: False
   failed_when: False
@@ -77,7 +77,7 @@
         {{ perlbrew }} exec --with perl-5.10.1
         'make -j {{ ansible_processor_vcpus + 1 }} fixdeps'
       args:
-        chdir: /opt/src/{{ rt_version }}
+        chdir: "{{ rt_src_dir }}"
 
   when: rt_testdeps|failed
 

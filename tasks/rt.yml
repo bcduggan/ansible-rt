@@ -4,13 +4,13 @@
     {{ perlbrew }} exec --with perl-5.10.1
     'make install'
   args:
-    chdir: /opt/src/{{ rt_version }}
-    creates: /opt/rt4
+    chdir: "{{ rt_src_dir }}"
+    creates: "{{ rt_dir }}"
 
 - name: Install RT_SiteConfig.pm
   template:
     src: RT_SiteConfig.pm
-    dest: /opt/rt4/etc/RT_SiteConfig.pm
+    dest: "{{ rt_dir }}/etc/RT_SiteConfig.pm"
     backup: yes
   notify: Restart Apache
 
@@ -20,39 +20,24 @@
 
 - name: Set RT Mason cache attributes
   file:
-    path: /opt/rt4/var/mason_data
+    path: "{{ rt_dir }}/var/mason_data"
     owner: "{{ cache_owner }}"
     group: "{{ cache_owner }}"
     mode: o+rx
 
 - name: Create GnuPG home directory
   file:
-    path: /opt/rt4/var/data/gpg
+    path: "{{ rt_dir }}/var/data/gpg"
     state: directory
     owner: "{{ cache_owner }}"
     group: "{{ cache_owner }}"
 
 - name: Create S/MIME home directory
   file:
-    path: /opt/rt4/var/data/smime
+    path: "{{ rt_dir }}/var/data/smime"
     state: directory
     owner: "{{ cache_owner }}"
     group: "{{ cache_owner }}"
-
-- name: Test rt4 database presence
-  command: >
-    /bin/mysql --user=root --password={{ mysql_root_password }}
-    --batch --execute='show databases;'
-  register: rt4_db_test
-  changed_when: False
-
-- name: Initialize RT database
-  command: >
-    {{ perlbrew }} exec --with perl-5.10.1
-    'echo {{ mysql_root_password }} | make initialize-database'
-  args:
-    chdir: /opt/src/{{ rt_version }}
-  when: '"rt4" not in rt4_db_test.stdout_lines'
 
 - name: Push rt4.sh
   template:

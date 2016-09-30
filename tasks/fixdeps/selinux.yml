@@ -1,4 +1,9 @@
 ---
+- name: Install policycoreutils-python
+  yum:
+    name: policycoreutils-python
+    state: installed
+
 - name: Enable SELinux
   selinux:
     state: enforcing
@@ -40,7 +45,7 @@
     
 - name: Restore default RT file contexts
   file:
-    path: /opt/rt4
+    path: "{{ rt_dir }}"
     state: directory
     recurse: yes
     seuser: _default

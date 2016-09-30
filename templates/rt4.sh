@@ -1,1 +1,1 @@
-export PERL5LIB=/opt/rt4/lib
+export PERL5LIB={{ rt_dir }}/lib

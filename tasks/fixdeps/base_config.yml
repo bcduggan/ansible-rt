@@ -1,0 +1,17 @@
+---
+# Fix man and perldoc escape sequence processing
+- name: Push pager.sh
+  template:
+    src: pager.sh
+    dest: /etc/profile.d/pager.sh
+
+- name: keepcache=1
+  replace: 
+    dest: /etc/yum.conf
+    regexp: ^keepcache=0$
+    replace: keepcache=1
+
+- name: Install CentOS Development tools
+  yum:
+    name: "@Development tools"
+    state: installed

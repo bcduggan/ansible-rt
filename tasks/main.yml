@@ -1,47 +1,52 @@
 ---
-# Fix man and perldoc escape sequence processing
-- name: Push pager.sh
-  template:
-    src: pager.sh
-    dest: /etc/profile.d/pager.sh
+# Fail when either of the mutually exclusive sets of variables are true.
+- fail:
+    msg: "{{ usage }}"
+  when: ( fixdeps or install or initialize_db ) and ( refresh_rt or refresh_db )
 
-- name: Install policycoreutils-python
-  yum:
-    name: policycoreutils-python
-    state: installed
+# Don't run all defaults when any of the variables for individual
+# default actions are true.
+- set_fact:
+    all_defaults: no
+  when: fixdeps or install or initialize_db
 
-- include: local_facts.yml
+# Don't run any defaults when any of the variables for meta actions
+# are true.
+- set_fact:
+    defaults: no
+    all_defaults: no
+  when: refresh_rt or refresh_db
 
-- name: Setup SELinux for RT
-  include: selinux.yml
-  when: selinux
-  
-- name: keepcache=1
-  replace: 
-    dest: /etc/yum.conf
-    regexp: ^keepcache=0$
-    replace: keepcache=1
+- block:
+  - set_fact:
+      all_defaults: no
+    when: fixdeps or install or initialize_db
+    
+  - include: fixdeps/main.yml      
+    tags:
+      - fixdeps
+    when: all_defaults or fixdeps
 
-- name: Install CentOS Development tools
-  yum:
-    name: "@Development tools"
-    state: installed
+  - name: Install RT
+    include: rt.yml
+    environment:
+      PERLBREW_ROOT: "{{ perlbrew_root }}"
+    when: all_defaults or install
 
-- name: Setup TLS
-  include: tls.yml
+  - name: Initialize RT database
+    include: rt_db.yml
+    when: all_defaults or initialize_db
 
-- name: Install Apache
-  include: apache.yml
+  - name: Install RT extensions
+    include: install_extensions.yml
+    when: all_defaults or install
 
-- name: Install RT dependencies
-  include: rt_deps.yml
-  environment:
-    PERLBREW_ROOT: "{{ perlbrew_root }}"
+  when: defaults
 
-- name: Install RT
-  include: rt.yml
-  environment:
-    PERLBREW_ROOT: "{{ perlbrew_root }}"
+- debug:
+    msg: Refresh RT
+  when: refresh_rt
 
-- name: Install RT extensions
-  include: install_extensions.yml
+- debug:
+    msg: Refresh RT database
+  when: refresh_db

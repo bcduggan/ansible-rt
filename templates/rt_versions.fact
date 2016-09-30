@@ -1,0 +1,25 @@
+#!/opt/perl5/perls/perl-5.10.1/bin/perl -w -I /opt/rt4/lib
+
+use strict;
+use warnings;
+
+use JSON::PP;
+use RT;
+
+#Load RT's config file
+RT::LoadConfig();
+# Connect to the database. Set up logging
+RT::Init();
+
+my %rt_versions;
+
+my @plugins = RT->Config->Get('Plugins');
+
+$rt_versions{RT} = RT->VERSION;
+
+foreach my $plugin(@plugins) {
+    $rt_versions{$plugin} = eval $plugin . "->VERSION";
+}
+
+print encode_json \%rt_versions;
+

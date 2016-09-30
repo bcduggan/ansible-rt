@@ -6,6 +6,6 @@
 
 - name: Clear Mason cache
   file:
-    path: /opt/rt4/var/mason_data/obj
+    path: "{{ rt_dir }}/mason_data/obj"
     state: absent
   notify: Restart Apache
