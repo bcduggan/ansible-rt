@@ -1,3 +1,13 @@
 ---
 rt_src_dir: "{{ src_dir }}/rt-{{ rt_version }}"
 rt_src_tarball: "{{ rt_src_dir }}.tar.gz"
+
+# Mail::Header needed for
+# - MIME::Entity
+# - Test::Email
+# - Email::Abstract
+pinned_cpan_packages:
+  5.10.1:
+    - Test::Expect@0.32
+    - Starlet@0.19
+    - Mail::Header@2.14

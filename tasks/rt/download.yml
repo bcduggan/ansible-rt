@@ -1,0 +1,19 @@
+---
+- include_vars: rt_versions.yml
+
+- name: Download RT
+  get_url:
+    url: https://download.bestpractical.com/pub/rt/release/rt-{{ rt_version }}.tar.gz
+    dest: "{{ rt_src_dir }}.tar.gz"
+    validate_certs: yes
+    sha256sum: "{{ rt[rt_version].checksum }}"
+    force: no
+
+- name: Untar and ungzip RT
+  unarchive:
+    copy: no
+    src: "{{ rt_src_tarball }}"
+    dest: "{{ src_dir }}"
+    creates: "{{ rt_src_dir }}"
+    owner: root
+    group: root

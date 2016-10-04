@@ -1,52 +1,69 @@
 ---
-# Fail when either of the mutually exclusive sets of variables are true.
-- fail:
-    msg: "{{ usage }}"
-  when: ( fixdeps or install or initialize_db ) and ( refresh_rt or refresh_db )
-
-# Don't run all defaults when any of the variables for individual
-# default actions are true.
-- set_fact:
-    all_defaults: no
-  when: fixdeps or install or initialize_db
-
-# Don't run any defaults when any of the variables for meta actions
-# are true.
-- set_fact:
-    defaults: no
-    all_defaults: no
-  when: refresh_rt or refresh_db
+#- fail:
+#    msg: RT downgrade is not supported
+#  when: item.0|int < item.1|int
+#  with_together:
+#    - "{{ rt_version.split('.') }}"
+#    - "{{ ansible_local.rt_versions['RT'].split('.') }}"
 
 - block:
   - set_fact:
-      all_defaults: no
-    when: fixdeps or install or initialize_db
+      upgrade: yes
+    when: version_part.0|int > version_part.1|int
+    with_together:
+      - "{{ rt_version.split('.') }}"
+      - "{{ ansible_local.rt_versions['RT'].split('.') }}"
+    loop_control:
+      loop_var: version_part
+
+  when: ansible_local.rt_versions['RT'] is defined
+
+# Don't run default tasks in refresh mode
+- set_fact:
+    defaults: no
+  when: refresh_rt or refresh_database
+
+- block:
+  - name: Base RT system configuration
+    include: base/main.yml
+
+  - name: Download RT
+    include: rt/download.yml
+
+  - name: Configure RT installation
+    include: rt/configure.yml
     
-  - include: fixdeps/main.yml      
-    tags:
-      - fixdeps
-    when: all_defaults or fixdeps
+  - name: Fix RT dependencies
+    include: rt/fixdeps.yml
 
   - name: Install RT
-    include: rt.yml
-    environment:
-      PERLBREW_ROOT: "{{ perlbrew_root }}"
-    when: all_defaults or install
+    include: rt/install.yml
+    when: not upgrade
+
+  - name: Upgrade RT
+    include: rt/upgrade.yml
+    when: upgrade
 
   - name: Initialize RT database
-    include: rt_db.yml
-    when: all_defaults or initialize_db
+    include: rt/initialize_database.yml
+    when: setup_database and not upgrade
+
+  - name: Upgrade RT database
+    include: rt/upgrade_database.yml
+    when: setup_database and upgrade
 
   - name: Install RT extensions
-    include: install_extensions.yml
-    when: all_defaults or install
+    include: rt_extensions/main.yml
+    with_items: "{{ rt_extensions }}"
+    loop_control:
+      loop_var: rt_extension
 
+  environment:
+    PERLBREW_ROOT: "{{ perlbrew_root }}"
   when: defaults
 
-- debug:
-    msg: Refresh RT
-  when: refresh_rt
-
-- debug:
-    msg: Refresh RT database
-  when: refresh_db
+- name: Refresh RT
+  include: refresh/main.yml
+  environment:
+    PERLBREW_ROOT: "{{ perlbrew_root }}"
+  when: refresh_rt or refresh_database

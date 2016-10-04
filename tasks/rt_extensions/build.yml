@@ -1,0 +1,16 @@
+---
+- name: Generate RT extension Makefile
+  command: >
+    {{ perlbrew }} exec --with perl-5.10.1
+    'perl Makefile.PL'
+  args:
+    chdir: "{{ rt_extension_dir }}"
+    creates: "{{ rt_extension_dir }}/Makefile"
+
+- name: Build RT extension
+  command: >
+    {{ perlbrew }} exec --with perl-5.10.1
+    'make'
+  args:
+    chdir: "{{ rt_extension_dir }}"
+    creates: "{{ rt_extension_dir }}/blib"

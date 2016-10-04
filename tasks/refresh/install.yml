@@ -1,0 +1,25 @@
+---
+- name: Remove RT source directory
+  file:
+    path: "{{ rt_src_dir }}"
+    state: absent
+
+- name: Unpack RT source directory
+  include: ../rt/download.yml
+  environment:
+    PERLBREW_ROOT: "{{ perlbrew_root }}"
+
+- name: Configure RT source
+  include: ../rt/configure.yml
+  environment:
+    PERLBREW_ROOT: "{{ perlbrew_root }}"
+
+- name: Remove RT web directory
+  file:
+    path: "{{ rt_dir }}"
+    state: absent
+
+- name: Re-install RT
+  include: ../rt/install.yml
+  environment:
+    PERLBREW_ROOT: "{{ perlbrew_root }}"

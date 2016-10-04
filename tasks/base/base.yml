@@ -1,0 +1,105 @@
+---
+# Fix man and perldoc escape sequence processing
+- name: Push pager.sh
+  template:
+    src: pager.sh
+    dest: /etc/profile.d/pager.sh
+
+- name: Push rt4.sh
+  template:
+    src: rt4.sh
+    dest: /etc/profile.d/rt4.sh
+    
+- name: keepcache=1
+  replace: 
+    dest: /etc/yum.conf
+    regexp: ^keepcache=0$
+    replace: keepcache=1
+
+- name: Install CentOS Development tools
+  yum:
+    name: "@Development tools"
+    state: installed
+
+- name: Install RPM deps for RT
+  yum:
+    name: "{{ rt_rpm_dep }}"
+    state: installed
+  with_items:
+    - httpd
+    - openssl-devel
+    - graphviz-devel
+    - libxml2-devel
+    - expat-devel
+    - gd-devel
+    - mariadb-devel
+  loop_control:
+    loop_var: rt_rpm_dep
+
+- name: Install MySQL-python interface
+  yum:
+    name: MySQL-python
+    state: latest
+
+- name: Create source directory
+  file:
+    path: "{{ src_dir }}"
+    state: directory
+
+- name: Create RT log directory
+  file:
+    path: "{{ rt_log_dir }}"
+    state: directory
+    owner: apache
+    group: apache
+    mode: 0750
+
+- name: Touch RT log file
+  command: "touch {{ rt_logfile }}"
+  args:
+    creates: "{{ rt_logfile }}"
+
+- name: Create RT log file
+  file:
+    path: "{{ rt_logfile }}"
+    state: file
+    owner: apache
+    group: apache
+    mode: 0640
+
+# For RT Extensions
+- name: Install git
+  yum:
+    name: git
+    state: latest
+
+- name: .ssh directory
+  file:
+    path: /root/.ssh
+    state: directory
+    mode: 0700
+    owner: root
+    group: root
+
+- name: Push deploy keys
+  copy:
+    dest: /root/.ssh/id_rsa
+    content: "{{ deploy_key }}"
+    mode: 0600
+    owner: root
+    group: root
+  with_items: "{{ deploy_keys }}"
+  loop_control:
+    loop_var: deploy_key
+  no_log: true
+
+- name: Push deploy public keys
+  copy:
+    dest: /root/.ssh/id_rsa.pub
+    content: "{{ deploy_public_key }}"
+    mode: 0600
+    owner: root
+    group: root
+  with_items: "{{ deploy_public_keys }}"
+  loop_control:
+    loop_var: deploy_public_key

@@ -1,0 +1,11 @@
+---
+- name: Upgrade RT extension database
+  command: >
+    {{ perlbrew }} exec --with {{ perl_version }}
+    'echo {{ mysql_root_password }} | {{ rt_dir }}/sbin/rt-setup-database --action insert --datafile etc/upgrade/{{ rt_extension.upgrade_database_from_version }}/content'
+  args:
+    chdir: "{{ rt_extension_dir }}"
+  notify: Clear Mason cache
+  when: setup_database and RT_SiteConfig_result|changed and rt_extension.initdb
+
+    

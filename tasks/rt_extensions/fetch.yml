@@ -1,0 +1,33 @@
+---
+- block:
+  - name: Remove RT extension directory
+    file:
+      path: "{{ rt_extension_dir }}"
+      state: absent
+
+  - name: Clone RT extension
+    git:
+      repo: "{{ rt_extension.repo }}"
+      version: "{{ rt_extension.version }}"
+      dest: "{{ rt_extension_dir }}"
+      force: yes
+      accept_hostkey: yes
+
+  when: rt_extension.protocol == "git"
+
+- block:
+  - name: Download RT extension tarball
+    get_url:
+      url: "{{ rt_extension.url }}"
+      dest: "{{ rt_extension_tarball }}"
+      validate_certs: yes
+      force: yes
+      checksum: "{{ rt_extension.checksum }}"
+
+  - name: Untar and ungzip RT extension tarball
+    unarchive:
+      copy: no
+      src: "{{ rt_extension_tarball }}"
+      dest: "{{ src_dir }}"
+
+  when: rt_extension.protocol == "http"

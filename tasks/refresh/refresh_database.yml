@@ -1,0 +1,12 @@
+---
+- name: Remove RT database
+  mysql_db:
+    name: rt4
+    state: absent
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Re-initialize RT database
+  include: ../rt/initialize_database.yml
+  environment:
+    PERLBREW_ROOT: "{{ perlbrew_root }}"

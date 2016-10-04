@@ -1,0 +1,7 @@
+---
+- name: Upgrade RT
+  command: >
+    {{ perlbrew }} exec --with perl-5.10.1
+    'make upgrade'
+  args:
+    chdir: "{{ rt_src_dir }}"

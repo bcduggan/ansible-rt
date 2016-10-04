@@ -1,0 +1,12 @@
+---
+- name: Upgrade RT database
+  command: |
+    {{ perlbrew }} exec --with perl-5.10.1 \
+    'make upgrade-database <<EOF
+    {{ mysql_root_password }}
+    {{ ansible_local.rt_versions['RT'] }}
+
+    y
+    EOF'
+  args:
+    chdir: "{{ rt_src_dir }}"

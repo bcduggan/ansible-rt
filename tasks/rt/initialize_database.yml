@@ -1,0 +1,19 @@
+---
+- name: Check rt4 database presence
+  command: >
+    /bin/mysql --user=root --password={{ mysql_root_password }}
+    --batch --execute='show databases;'
+  register: rt4_database_check_result
+  changed_when: False
+
+- name: Initialize RT database
+  command: >
+    {{ perlbrew }} exec --with {{ perl_version }}
+    'echo {{ mysql_root_password }} | make initialize-database'
+  args:
+    chdir: "{{ rt_src_dir }}"
+  register: rt_initialize_database_result
+  failed_when: >
+    rt_initialize_database_result|failed or
+    rt_initialize_database_result.stdout == "No perl installation found."
+  when: ("rt4" not in rt4_database_check_result.stdout_lines)

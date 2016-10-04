@@ -1,0 +1,24 @@
+---
+- name: Stop Apache
+  service:
+    name: httpd
+    state: stopped
+
+- name: Refresh RT web directory
+  include: install.yml
+  when: refresh_rt
+
+- name: Refresh RT database
+  include: refresh_database.yml
+  when: setup_database and refresh_database
+
+- name: Refresh RT extensions
+  include: ../rt_extensions/main.yml
+  with_items: "{{ rt_extensions }}"
+  loop_control:
+    loop_var: rt_extension
+  
+- name: Start Apache
+  service:
+    name: httpd
+    state: started

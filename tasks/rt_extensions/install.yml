@@ -1,0 +1,23 @@
+---
+# creates doesn't detect presence of file or directory when
+# dynamically set. This always produces a changed result.
+# Workaround: Hard code creates value
+- name: Install RT extension
+  command: >
+    {{ perlbrew }} exec --with {{ perl_version }}
+    'make install'
+  args:
+    chdir: "{{ rt_extension_dir }}"
+    creates: "{{ rt_dir }}/local/plugins/{{ rt_extension_file_name }}"
+
+# RT_SiteConfig.pm is a loadable perl file, which always return
+# something. This file returns 1 by asserting the value "1;" on the
+# last line. We have to insert this string somewhere before that.
+- name: Enable RT extension in RT_SiteConfig.pm
+  lineinfile:
+    dest: "{{ rt_dir }}/etc/RT_SiteConfig.pm"
+    line: Plugin('{{ rt_extension.name }}');
+    state: present
+    insertbefore: "^1;$"
+  register: RT_SiteConfig_result
+  notify: Clear Mason cache

@@ -13,7 +13,7 @@
 
 - name: Push local fact files and templates
   template:
-    src: "{{ item }}"
+    src: "{{ fact_file }}"
     dest: /etc/ansible/facts.d/{{ item|basename }}
     owner: root
     group: root
@@ -23,12 +23,10 @@
     setype: _default
     selevel: _default
   with_fileglob:
-    - ./*.fact
     - ../templates/*.fact
+  loop_control:
+    loop_var: fact_file
   register: push_local_facts_result
 
 - action: setup
   when: push_local_facts_result | changed
-
-#- set_fact:
-#    rt_tasks: "{{ ansible_local.rt_versions.RT

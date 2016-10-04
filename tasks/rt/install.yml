@@ -38,8 +38,3 @@
     state: directory
     owner: "{{ cache_owner }}"
     group: "{{ cache_owner }}"
-
-- name: Push rt4.sh
-  template:
-    src: rt4.sh
-    dest: /etc/profile.d/rt4.sh

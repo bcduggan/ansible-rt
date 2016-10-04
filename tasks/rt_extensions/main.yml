@@ -1,0 +1,34 @@
+---
+- set_fact:
+    rt_extension_file_name: "{{ rt_extension.name|replace('::','-') }}-{{ rt_extension.version }}"
+
+- set_fact:
+    rt_extension_dir: "{{ src_dir }}/{{ rt_extension_file_name }}"
+
+- set_fact:
+    rt_extension_tarball: "{{ rt_extension_dir }}.tar.gz"
+
+# There's no 'make upgrade' command for RT Extensions. We only have to
+# worry about the database.
+- name: Reset upgrade_database flag
+  set_fact:
+    upgrade_extension_database: no
+
+- name: Set upgrade_extension_database flag
+  set_fact:
+    upgrade_extension_database: yes
+  when: >
+    rt_extension.upgrade_extension_database_from_version is defined
+    and ansible_local.rt_versions[ rt_extension.name ] is defined
+
+- include: fetch.yml
+
+- include: build.yml
+
+- include: install.yml
+
+- include: initialize_database.yml
+  when: not upgrade_extension_database
+
+- include: upgrade_extension_database.yml
+  when: upgrade_extension_database

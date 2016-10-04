@@ -23,6 +23,12 @@ Set( $WebDomain, "{{ rt_hostname }}");
 Set( $WebPort, "{{ rt_port }}");
 Set( $WebPath, "");
 
+Set($LogToFile, "{{ rt_logtofile_level }}");
+Set($LogDir, "{{ rt_log_dir }}");
+Set($LogToFileNamed, "{{ rt_logtofile_name }}");
+
+#Set($LogStackTraces, "info");
+
 Set( $DevelMode, "{{ rt_develmode }}" );
 
 # You must install Plugins on your own, this is only an example

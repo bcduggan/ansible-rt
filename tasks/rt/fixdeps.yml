@@ -1,0 +1,38 @@
+---
+- name: Install pinned CPAN packages
+  command: >
+    {{ perlbrew }} exec --with {{ perl_version }}
+    '{{ perlbrew_cpanm }} {{ cpanm_notest | ternary('--notest','--no-notest') }} {{ pinned_cpan_package }}'
+  register: perlbrew_cpanm_result
+  changed_when: >
+    perlbrew_cpanm_result|success and
+    perlbrew_cpanm_result.stdout_lines|length > 1
+  with_items: "{{ pinned_cpan_packages[ perl_version ] }}"
+  loop_control:
+    loop_var: pinned_cpan_package
+
+- name: Fix RT dependencies
+  environment:
+    RT_FIX_DEPS_CMD: "{{ perlbrew_cpanm }}"
+    PERL_CPANM_OPT: "{{ cpanm_notest | ternary('--notest','--no-notest') }}"
+  command: >
+    {{ perlbrew }} exec --with {{ perl_version }}
+    'make -j {{ ansible_processor_vcpus + 1 }} fixdeps'
+  args:
+    chdir: "{{ rt_src_dir }}"
+  register: rt_fixdeps_result
+  failed_when: rt_fixdeps_result.stdout == "No perl installation found."
+  changed_when: >
+    rt_fixdeps_result|succeeded and
+    rt_fixdeps_result.stdout_lines[-1] != "All dependencies have been found."
+
+  # Several extensions depend on this module, which make fixdeps does
+  # not install
+- name: "Install DateTime::Set"
+  command: >
+    {{ perlbrew }} exec --with {{ perl_version }}
+    '{{ perlbrew_cpanm }} {{ cpanm_notest | ternary('--notest','--no-notest') }} DateTime::Set'
+  register: datetime_set_result
+  changed_when: >
+    datetime_set_result|succeeded and
+    datetime_set_result.stdout_lines|length > 1
