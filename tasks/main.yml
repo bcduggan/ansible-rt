@@ -6,17 +6,6 @@
 #    - "{{ rt_version.split('.') }}"
 #    - "{{ ansible_local.rt_versions['RT'].split('.') }}"
 
-- block:
-  - set_fact:
-      upgrade: yes
-    when: version_part.0|int > version_part.1|int
-    with_together:
-      - "{{ rt_version.split('.') }}"
-      - "{{ ansible_local.rt_versions['RT'].split('.') }}"
-    loop_control:
-      loop_var: version_part
-
-  when: ansible_local.rt_versions['RT'] is defined
 
 # Don't run default tasks in refresh mode
 - set_fact:
@@ -26,6 +15,17 @@
 - block:
   - name: Base RT system configuration
     include: base/main.yml
+
+  - block:
+    - set_fact:
+        upgrade: yes
+      when: version_part.0|int > version_part.1|int
+      with_together:
+        - "{{ rt_version.split('.') }}"
+        - "{{ ansible_local.rt_versions.RT.split('.') }}"
+      loop_control:
+        loop_var: version_part
+    when: ansible_local.rt_versions.RT
 
   - name: Download RT
     include: rt/download.yml

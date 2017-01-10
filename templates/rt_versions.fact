@@ -3,22 +3,30 @@
 use strict;
 use warnings;
 
+# Should not fail. ansible-rt/tasks/local_facts.yml should install JSON:PP
 use JSON::PP;
-use RT;
 
-#Load RT's config file
-RT::LoadConfig();
-# Connect to the database. Set up logging
-RT::Init();
+# For RT version test in ansible-rt/tasks/main.yml
+my %rt_versions = (
+    RT => '',
+    );
 
-my %rt_versions;
+# eval returns 1 on failure, 0 on success
+eval("use RT");
 
-my @plugins = RT->Config->Get('Plugins');
+if (!$@) {
+    #Load RT's config file
+    RT::LoadConfig();
+    # Connect to the database. Set up logging
+    RT::Init();
 
-$rt_versions{RT} = RT->VERSION;
+    my @plugins = RT->Config->Get('Plugins');
 
-foreach my $plugin(@plugins) {
-    $rt_versions{$plugin} = eval $plugin . "->VERSION";
+    $rt_versions{RT} = RT->VERSION;
+
+    foreach my $plugin(@plugins) {
+	$rt_versions{$plugin} = eval $plugin . "->VERSION";
+    }
 }
 
 print encode_json \%rt_versions;

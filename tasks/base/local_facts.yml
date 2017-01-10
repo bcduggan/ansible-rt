@@ -1,4 +1,14 @@
 ---
+# Needed for local facts files written in Perl to generate JSON output for Ansible
+- name: "Install JSON::PP"
+  command: >
+    {{ perlbrew }} exec --with {{ perl_version }}
+    '{{ perlbrew_cpanm }} {{ cpanm_notest | ternary('--notest','--no-notest') }} JSON::PP'
+  register: jsonpp_set_result
+  changed_when: >
+    jsonpp_set_result|succeeded and
+    jsonpp_set_result.stdout_lines|length > 1
+
 - name: Create /etc/ansible/facts.d
   file:
     path: /etc/ansible/facts.d
@@ -13,19 +23,11 @@
 
 - name: Push local fact files and templates
   template:
-    src: "{{ fact_file }}"
-    dest: /etc/ansible/facts.d/{{ item|basename }}
+    src: templates/rt_versions.fact
+    dest: /etc/ansible/facts.d
     owner: root
     group: root
     mode: 0755
-    seuser: _default
-    serole: _default
-    setype: _default
-    selevel: _default
-  with_fileglob:
-    - ../templates/*.fact
-  loop_control:
-    loop_var: fact_file
   register: push_local_facts_result
 
 - action: setup
