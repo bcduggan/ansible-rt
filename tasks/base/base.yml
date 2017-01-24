@@ -80,26 +80,3 @@
     mode: 0700
     owner: root
     group: root
-
-- name: Push deploy keys
-  copy:
-    dest: /root/.ssh/id_rsa
-    content: "{{ deploy_key }}"
-    mode: 0600
-    owner: root
-    group: root
-  with_items: "{{ deploy_keys }}"
-  loop_control:
-    loop_var: deploy_key
-  no_log: true
-
-- name: Push deploy public keys
-  copy:
-    dest: /root/.ssh/id_rsa.pub
-    content: "{{ deploy_public_key }}"
-    mode: 0600
-    owner: root
-    group: root
-  with_items: "{{ deploy_public_keys }}"
-  loop_control:
-    loop_var: deploy_public_key

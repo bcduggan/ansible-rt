@@ -1,4 +1,4 @@
-#!/opt/perl5/perls/perl-5.10.1/bin/perl -w -I /opt/rt4/lib
+#!{{ perlbrew_root}}/perls/perl-{{ perl_version }}/bin/perl -w -I {{ rt_dir }}/lib
 
 use strict;
 use warnings;

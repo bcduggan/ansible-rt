@@ -1,0 +1,8 @@
+---
+- include_vars: rt_versions.yml
+
+- name: Clone RT
+  git:
+    repo: "{{ rt_git_url }}"
+    dest: "{{ rt_src_dir }}"
+    version: "{{ rt_branch }}"

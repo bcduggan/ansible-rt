@@ -3,7 +3,7 @@
 
 - name: Download RT
   get_url:
-    url: https://download.bestpractical.com/pub/rt/release/rt-{{ rt_version }}.tar.gz
+    url: "{{ rt_http_url }}"
     dest: "{{ rt_src_dir }}.tar.gz"
     validate_certs: yes
     sha256sum: "{{ rt[rt_version].checksum }}"

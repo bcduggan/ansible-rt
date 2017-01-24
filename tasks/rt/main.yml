@@ -1,0 +1,22 @@
+---
+- include: "{{ item }}"
+  with_items:
+    - git.yml
+    - configure.yml
+    - fixdeps.yml
+
+- name: Install RT
+  include: install.yml
+  when: not upgrade
+
+- name: Upgrade RT
+  include: upgrade.yml
+  when: upgrade
+
+- name: Initialize RT database
+  include: initialize_database.yml
+  when: setup_database and not upgrade
+
+- name: Upgrade RT database
+  include: upgrade_database.yml
+  when: setup_database and upgrade

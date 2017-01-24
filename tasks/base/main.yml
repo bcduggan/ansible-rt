@@ -1,10 +1,10 @@
 ---
-  - include: "{{ item }}"
-    with_items:
-      - base.yml
-      - local_facts.yml
-      - tls.yml
-      - apache.yml
+- include: "{{ item }}"
+  with_items:
+    - base.yml
+    - local_facts.yml
+    - tls.yml
+    - apache.yml
   
 #  - name: Setup SELinux for RT
 #    include: selinux.yml

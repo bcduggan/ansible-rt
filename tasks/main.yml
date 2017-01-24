@@ -27,30 +27,8 @@
         loop_var: version_part
     when: ansible_local.rt_versions.RT
 
-  - name: Download RT
-    include: rt/download.yml
-
-  - name: Configure RT installation
-    include: rt/configure.yml
-    
-  - name: Fix RT dependencies
-    include: rt/fixdeps.yml
-
-  - name: Install RT
-    include: rt/install.yml
-    when: not upgrade
-
-  - name: Upgrade RT
-    include: rt/upgrade.yml
-    when: upgrade
-
-  - name: Initialize RT database
-    include: rt/initialize_database.yml
-    when: setup_database and not upgrade
-
-  - name: Upgrade RT database
-    include: rt/upgrade_database.yml
-    when: setup_database and upgrade
+  - name: Install or upgrade RT
+    include: rt/main.yml
 
   - name: Install RT extensions
     include: rt_extensions/main.yml
@@ -60,6 +38,7 @@
 
   environment:
     PERLBREW_ROOT: "{{ perlbrew_root }}"
+
   when: defaults
 
 - name: Refresh RT
