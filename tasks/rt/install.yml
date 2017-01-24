@@ -1,8 +1,10 @@
 ---
 - name: Install RT
+  environment:
+    PERLBREW_ROOT: /opt/perl5
   command: >
-    {{ perlbrew }} exec --with perl-5.10.1
-    'make install'
+    {{ perl_shell }}
+    '/usr/bin/make install'
   args:
     chdir: "{{ rt_src_dir }}"
     creates: "{{ rt_dir }}"
@@ -17,6 +19,21 @@
 - name: Set Mason cache owner
   set_fact:
     cache_owner: "{{ selinux | ternary('root','apache') }}"
+
+## There's probably a more concise way to do this.
+- name: Set RT Mason cache attributes
+  file:
+    path: "{{ rt_dir }}/var"
+    owner: "{{ cache_owner }}"
+    group: "{{ cache_owner }}"
+    mode: o+rx
+
+- name: Set RT Mason cache attributes
+  file:
+    path: "{{ rt_dir }}/var/log"
+    owner: "{{ cache_owner }}"
+    group: "{{ cache_owner }}"
+    mode: o+rx
 
 - name: Set RT Mason cache attributes
   file:

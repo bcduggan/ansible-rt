@@ -8,10 +8,13 @@ upgrade: no
 deploy_keys: []
 deploy_public_keys: []
 
+# Sourced from ansible_facts.ansible_all_ipv4_addresses
+rt_ipv4_address_index: 0
+
 src_dir: /opt/src
 rt_dir: /opt/rt4
 
-rt_version: "4.2.13"
+rt_version: "4.4.1"
 rt_name: My RT
 rt_hostname: "{{ ansible_hostname }}"
 rt_webpath:
@@ -23,7 +26,6 @@ rt_db_database: rt4
 rt_db_rt_user: rt_user
 rt_db_rt_pass: rt_pass
 rt_features:
-  - developer
   - graphviz
   - gd
   - gpg
@@ -32,7 +34,8 @@ rt_logtofile_level: info
 rt_log_dir: /var/log/rt
 rt_logtofile_name: rt.log
 rt_logfile: "{{ rt_log_dir }}/{{ rt_logtofile_name }}"
-rt_develmode: 0
+rt_develmode: 1
+rt_extensions: []
 
 tls_country: US
 tls_state: DC
@@ -46,5 +49,7 @@ perlbrew_root: /opt/perl5
 perlbrew_cpanm: "{{ perlbrew_root }}/bin/cpanm"
 perlbrew: "{{ perlbrew_root }}/bin/perlbrew"
 
-perl_version: "5.10.1"
+perl_version: "5.24.0"
 perl_shell: "{{ perlbrew }} exec --with {{ perl_version }}"
+
+cpanm_notest: False

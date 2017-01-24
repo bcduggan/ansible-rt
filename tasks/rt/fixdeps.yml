@@ -1,7 +1,7 @@
 ---
 - name: Install pinned CPAN packages
   command: >
-    {{ perlbrew }} exec --with {{ perl_version }}
+    {{ perl_shell }}
     '{{ perlbrew_cpanm }} {{ cpanm_notest | ternary('--notest','--no-notest') }} {{ pinned_cpan_package }}'
   register: perlbrew_cpanm_result
   changed_when: >
@@ -13,11 +13,12 @@
 
 - name: Fix RT dependencies
   environment:
+    PERLBREW_ROOT: /opt/perl5
     RT_FIX_DEPS_CMD: "{{ perlbrew_cpanm }}"
     PERL_CPANM_OPT: "{{ cpanm_notest | ternary('--notest','--no-notest') }}"
   command: >
-    {{ perlbrew }} exec --with {{ perl_version }}
-    'make -j {{ ansible_processor_vcpus + 1 }} fixdeps'
+    {{ perl_shell }}
+    '/usr/bin/make -j {{ ansible_processor_vcpus + 1 }} fixdeps'
   args:
     chdir: "{{ rt_src_dir }}"
   register: rt_fixdeps_result
@@ -30,7 +31,7 @@
   # not install
 - name: "Install DateTime::Set"
   command: >
-    {{ perlbrew }} exec --with {{ perl_version }}
+    {{ perl_shell }}
     '{{ perlbrew_cpanm }} {{ cpanm_notest | ternary('--notest','--no-notest') }} DateTime::Set'
   register: datetime_set_result
   changed_when: >

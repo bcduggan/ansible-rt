@@ -1,18 +1,32 @@
 ---
+- name: Remove autoconfig cache
+  file:
+    path: '{{ rt_src_dir }}/autom4te.cache'
+    state: absent
+
+- name: Generate configure
+  command: '{{ perl_shell }} ./configure.ac'
+  args:
+    chdir: '{{ rt_src_dir }}'
+  environment:
+    PERLBREW_ROOT: "{{ perlbrew_root }}"
+
 - name: Configure RT
+  environment:
+    PERLBREW_ROOT: /opt/perl5
   command: >
-    {{ perlbrew }} exec --with {{ perl_version }}
+    {{ perl_shell }}
     './configure
     --with-db-database={{ rt_db_database }}
     --with-db-host={{ rt_db_host }}
     --with-db-port={{ rt_db_port }}
     --with-db-rt-user={{ rt_db_rt_user }}
     --with-db-rt-pass={{ rt_db_rt_pass }}
-    --enable-developer
     --enable-graphviz
-    --enable-gd'
-#    --enable-gpg
-#    --enable-smime
+    --enable-developer
+    --enable-gd
+    --enable-gpg
+    --enable-smime'
   args:
     chdir: "{{ rt_src_dir }}"
     creates: "{{ rt_src_dir }}/config.status"
